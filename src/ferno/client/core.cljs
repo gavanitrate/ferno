@@ -1,9 +1,9 @@
-(ns ferno.core
+(ns ferno.client.core
   (:require [reagent.core :as r]))
 
 (defn home-page []
-  [:div [:h2 "Welcome Home"]])
-
+  [:div.container
+   [:h2 "Ferno"]])
 
 (defn mount-root []
   (r/render [home-page] (.getElementById js/document "app")))

@@ -1,8 +1,7 @@
 (ns ^:figwheel-no-load ferno.dev
   (:require
-    [ferno.core :as core]
+    [ferno.client.core :as core]
     [devtools.core :as devtools]))
-
 
 (enable-console-print!)
 

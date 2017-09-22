@@ -1,6 +1,6 @@
 (ns ferno.prod
   (:require
-    [ferno.core :as core]))
+    [ferno.client.core :as core]))
 
 ;;ignore println statements in prod
 (set! *print-fn* (fn [& _]))

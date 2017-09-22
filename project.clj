@@ -4,6 +4,8 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.908"]
+                 [org.clojure/data.json "0.2.6"]
+
                  [reagent "0.8.0-alpha1"]
                  [com.cognitect/transit-cljs "0.8.239"]
                  [datascript "0.16.2"]
@@ -22,7 +24,6 @@
   :figwheel {:http-server-root "public"
              :server-port      3964
              :css-dirs         ["resources/public/css"]
-
              :repl             false}
 
   :cljsbuild {:builds
@@ -35,15 +36,26 @@
                                :source-map    true
                                :optimizations :none
                                :pretty-print  true}
-                :figwheel     {:on-jsload "ferno.core/mount-root"
+                :figwheel     {:on-jsload "ferno.client.core/mount-root"
                                :open-urls ["http://localhost:3964/index.html"]}}
+
                :release
                {:source-paths ["src" "env/prod/cljs"]
                 :compiler     {:output-to     "resources/public/js/app.js"
                                :output-dir    "resources/public/js/release"
                                :asset-path    "js/out"
                                :optimizations :advanced
-                               :pretty-print  false}}}}
+                               :pretty-print  false}}
+
+               :txactor
+               {:source-paths ["src/ferno/txactor"]
+                :compiler     {:target        :nodejs
+                               :main          "ferno.txactor.core"
+                               :output-to     "resources/build/ferno-txactor/txactor.js"
+                               :output-dir    "resources/build/ferno-txactor"
+                               :npm-deps      {:firebase-admin "5.2.1"}
+                               :install-deps  true
+                               :optimizations :none}}}}
 
   :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}
 
