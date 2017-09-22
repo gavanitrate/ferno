@@ -1,6 +1,12 @@
 {
+  "scripts": {
+    "dev-txactor": "node ./resources/build/ferno-txactor/txactor.js -L"
+  },
   "dependencies": {
     "@cljs-oss/module-deps": "^1.1.1",
     "firebase-admin": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }

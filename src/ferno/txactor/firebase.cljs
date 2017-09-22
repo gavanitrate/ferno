@@ -8,3 +8,5 @@
 
 (.initializeApp fb #js {:credential  fb-cred
                         :databaseURL "https://engg4805.firebaseio.com"})
+
+(def database (-> fb .database))

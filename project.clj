@@ -28,7 +28,7 @@
 
   :cljsbuild {:builds
               {:dev
-               {:source-paths ["src" "env/dev/cljs"]
+               {:source-paths ["src/ferno/client" "env/dev/cljs"]
                 :compiler     {:main          "ferno.dev"
                                :output-to     "resources/public/js/app.js"
                                :output-dir    "resources/public/js/out"
@@ -40,7 +40,7 @@
                                :open-urls ["http://localhost:3964/index.html"]}}
 
                :release
-               {:source-paths ["src" "env/prod/cljs"]
+               {:source-paths ["src/ferno/client" "env/prod/cljs"]
                 :compiler     {:output-to     "resources/public/js/app.js"
                                :output-dir    "resources/public/js/release"
                                :asset-path    "js/out"
