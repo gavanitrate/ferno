@@ -2,7 +2,7 @@
   :description "engg4805 project"
   :url "https://github.com/gavanitrate/ferno"
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.9.0-beta1"]
                  [org.clojure/clojurescript "1.9.908"]
                  [org.clojure/data.json "0.2.6"]
 
@@ -16,10 +16,13 @@
 
   :min-lein-version "2.5.0"
 
-  :clean-targets ^{:protect false}
-[:target-path
- [:cljsbuild :builds :app :compiler :output-dir]
- [:cljsbuild :builds :app :compiler :output-to]]
+  :clean-targets
+  ^{:protect false}
+  [:target-path
+   "resources/public/css"
+   "resources/public/js/out"
+   "resources/public/js/app.js"
+   "resources/build/ferno-txactor"]
 
   :figwheel {:http-server-root "public"
              :server-port      3964
@@ -27,7 +30,7 @@
              :repl             false}
 
   :cljsbuild {:builds
-              {:dev
+              {:client-dev
                {:source-paths ["src/ferno/client" "env/dev/cljs"]
                 :compiler     {:main          "ferno.dev"
                                :output-to     "resources/public/js/app.js"
@@ -39,7 +42,7 @@
                 :figwheel     {:on-jsload "ferno.client.core/mount-root"
                                :open-urls ["http://localhost:3964/index.html"]}}
 
-               :release
+               :client-release
                {:source-paths ["src/ferno/client" "env/prod/cljs"]
                 :compiler     {:output-to     "resources/public/js/app.js"
                                :output-dir    "resources/public/js/release"
@@ -55,9 +58,10 @@
                                :output-dir    "resources/build/ferno-txactor"
                                :npm-deps      {:firebase-admin "5.2.1"}
                                :install-deps  true
-                               :optimizations :none}}}}
+                               :optimizations :simple}}}}
 
-  :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}
+  :aliases {"package-client"  ["do" "clean" ["cljsbuild" "once" "client-release"]]
+            "package-txactor" ["do" "clean" ["cljsbuild" "once" "txactor"]]}
 
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.4"]
                                   [figwheel-sidecar "0.5.13"]

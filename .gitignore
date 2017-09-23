@@ -8,8 +8,6 @@ pom.xml.asc
 *.class
 /.lein-*
 /.nrepl-port
-/resources/public/js
-/public/js/out
 /out
 /.repl
 *.log
@@ -19,3 +17,6 @@ pom.xml.asc
 node_modules/
 resources/build/
 resources/secrets/
+/resources/public/js
+/resources/public/css
+/public/js/out

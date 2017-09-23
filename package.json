@@ -1,12 +1,15 @@
 {
   "scripts": {
-    "nodemon-txactor": "nodemon ./resources/build/ferno-txactor/txactor.js"
+    "nodemon-txactor": "nodemon ./resources/build/ferno-txactor/txactor.js",
+    "watch-client-sass": "node-sass -w src/ferno/client/styles/client.scss -o resources/public/css"
   },
   "dependencies": {
     "@cljs-oss/module-deps": "^1.1.1",
+    "bulma": "^0.5.3",
     "firebase-admin": "^5.2.1"
   },
   "devDependencies": {
+    "node-sass": "^4.5.3",
     "nodemon": "^1.12.1"
   }
 }
