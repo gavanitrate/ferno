@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev-txactor": "node ./resources/build/ferno-txactor/txactor.js -L"
+    "nodemon-txactor": "nodemon ./resources/build/ferno-txactor/txactor.js"
   },
   "dependencies": {
     "@cljs-oss/module-deps": "^1.1.1",

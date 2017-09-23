@@ -1,0 +1,5 @@
+{
+  "watch": [
+    "resources/build/ferno-txactor/txactor.js"
+  ]
+}

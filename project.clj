@@ -1,6 +1,6 @@
 (defproject ferno "0.1.0-SNAPSHOT"
   :description "engg4805 project"
-  :url "todo"
+  :url "https://github.com/gavanitrate/ferno"
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.908"]

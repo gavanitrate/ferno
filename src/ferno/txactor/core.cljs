@@ -8,10 +8,10 @@
 (nodejs/enable-util-print!)
 
 (defn -main [& args]
-  (println "---------------------------------------------")
-  (println "TXACTOR")
-  (println "STARUP : " (-> (DateTime.) .toUTCIsoString))
-  (println "---------------------------------------------")
-  (db/start-listening))
+      (println "---------------------------------------------")
+      (println "TXACTOR")
+      (println "STARTUP -" (-> (DateTime.) .toUTCIsoString))
+      (println "---------------------------------------------")
+      (db/start-listening))
 
 (set! *main-cli-fn* -main)
