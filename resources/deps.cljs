@@ -9,7 +9,8 @@
                 {:file     "vendor-js/firebase/firebase-storage.js"
                  :requires ["vendor.firebase.app"]
                  :provides ["vendor.firebase.storage"]}]
- :externs      ["vendor-js/firebase/firebase-app-externs.js"
-                "vendor-js/firebase/firebase-auth-externs.js"
-                "vendor-js/firebase/firebase-database-externs.js"
-                "vendor-js/firebase/firebase-storage-externs.js"]}
+ ;:externs      ["vendor-js/firebase/firebase-app-externs.js"
+ ;               "vendor-js/firebase/firebase-auth-externs.js"
+ ;               "vendor-js/firebase/firebase-database-externs.js"
+ ;               "vendor-js/firebase/firebase-storage-externs.js"]
+ }

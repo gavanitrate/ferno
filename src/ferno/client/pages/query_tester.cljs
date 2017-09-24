@@ -21,9 +21,20 @@
        [:div.level-left
         [:label.level-item "Prefill"]]
        [:div.level-right
-        [:button.button.is-small
-         {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}]")}
-         ":person/name"]]]]]
+        [:div.field.is-grouped
+         [:div.control
+          [:button.button.is-small
+           {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}]")}
+           ":person/name"]]
+         [:div.control
+          [:button.button.is-small
+           {:on-click #(swap! state assoc :tx-data "[[:db/retract 1 :person/name \"Greg Davies\"]]")}
+           ":db/retract"]]
+         [:div.control
+          [:button.button.is-small
+           {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}\n[:db/retract 1 :person/name \"Greg Davies\"]]")}
+           "both"]]
+         ]]]]]
 
     (try
       (when-let [tx-data (-> data :tx-data reader/read-string)]

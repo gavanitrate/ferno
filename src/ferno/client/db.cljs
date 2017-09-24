@@ -1,5 +1,6 @@
 (ns ferno.client.db
   (:require [ferno.transit :as transit]
+            [ferno.db :as ferno.db]
             [datascript.core :as d]
             [ferno.client.firebase :as fb]
             [posh.reagent :as p]))
@@ -15,33 +16,33 @@
         (.ref "/tx-queue")
         (.push encoded))))
 
-;; TODO datom helper
-(defn clj->datom [clj-datom]
-  (let [e (:e clj-datom)
-        a (:a clj-datom)
-        v (:v clj-datom)]
-    ;(d/datom e a v)
-    [:db/add e a v]
-    ))
+(defn listen-to-adds! []
+  (when-not (:add @synced?)
+    (swap! synced? assoc :add
+           (-> fb/database
+               (.ref "/datoms")
+               (.on "child_added"
+                    (fn [ss]
+                      (p/transact! cnx (ferno.db/sync-add-tx cnx (-> ss .toJSON js->clj)))))))))
 
-(defn sync-datoms [datom-list]
-  (->> datom-list vals
-       (map (comp clj->datom transit/decode))
-       (into [])
-       (d/transact cnx)))
+(defn listen-to-changes! []
+  (when-not (:change @synced?)
+    (swap! synced? assoc :change
+           (-> fb/database
+               (.ref "/datoms")
+               (.on "child_changed"
+                    (fn [ss]
+                      (p/transact! cnx (ferno.db/sync-add-tx cnx (-> ss .toJSON js->clj)))))))))
 
-(defn sync-datom [datom]
-  (->> datom
-       transit/decode
-       clj->datom
-       vector
-       (d/transact cnx)))
+(defn listen-to-retracts! []
+  (when-not (:retract @synced?)
+    (swap! synced? assoc :retract
+           (-> fb/database
+               (.ref "/datoms")
+               (.on "child_removed"
+                    (fn [ss]
+                      (p/transact! cnx (ferno.db/sync-retract-tx cnx (-> ss .toJSON js->clj)))))))))
 
-(defn initial-sync []
-  (when-not @synced?
-    (reset! synced?
-            (-> fb/database
-                (.ref "/datoms")
-                (.on "child_added" #(sync-datom (-> % .toJSON js->clj)))))))
-
-(initial-sync)
+(listen-to-adds!)
+(listen-to-changes!)
+(listen-to-retracts!)

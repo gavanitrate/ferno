@@ -6,7 +6,8 @@
   "dependencies": {
     "@cljs-oss/module-deps": "^1.1.1",
     "bulma": "^0.5.3",
-    "firebase-admin": "^5.2.1"
+    "firebase-admin": "^5.2.1",
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {
     "node-sass": "^4.5.3",
