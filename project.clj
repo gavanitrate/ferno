@@ -2,7 +2,8 @@
   :description "engg4805 project"
   :url "https://github.com/gavanitrate/ferno"
 
-  :dependencies [[org.clojure/clojure "1.9.0-beta1"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 ;[org.clojure/clojure "1.9.0-beta1"]
                  [org.clojure/clojurescript "1.9.908"]
                  [org.clojure/data.json "0.2.6"]
 
@@ -20,9 +21,8 @@
   ^{:protect false}
   [:target-path
    "resources/public/css"
-   "resources/public/js/out"
-   "resources/public/js/app.js"
-   "resources/build/ferno-txactor"]
+   "resources/public/js"
+   "resources/build"]
 
   :figwheel {:http-server-root "public"
              :server-port      3964
@@ -32,9 +32,9 @@
   :cljsbuild {:builds
               {:client-dev
                {:source-paths ["src/ferno/client" "env/dev/cljs"]
-                :compiler     {:main          "ferno.dev"
+                :compiler     {:main          ferno.dev
                                :output-to     "resources/public/js/app.js"
-                               :output-dir    "resources/public/js/out"
+                               :output-dir    "target/public/js/out"
                                :asset-path    "js/out"
                                :source-map    true
                                :optimizations :none
@@ -44,16 +44,33 @@
 
                :client-release
                {:source-paths ["src/ferno/client" "env/prod/cljs"]
-                :compiler     {:output-to     "resources/public/js/app.js"
-                               :output-dir    "resources/public/js/release"
-                               :asset-path    "js/out"
+                :compiler     {:main          ferno.prod
+                               :output-to     "resources/public/js/app.js"
+                               :output-dir    "target/public/js/release"
                                :optimizations :advanced
-                               :pretty-print  false}}
+                               :pretty-print  false
+                               :foreign-libs  [{:file     "vendor-js/firebase/firebase-app.js"
+                                                :provides ["vendor.firebase.app"]}
+                                               {:file     "vendor-js/firebase/firebase-database.js"
+                                                :requires ["vendor.firebase.app"]
+                                                :provides ["vendor.firebase.database"]}
+                                               ;{:file     "vendor-js/firebase/firebase-auth.js"
+                                               ; :requires ["vendor.firebase.app"]
+                                               ; :provides ["vendor.firebase.auth"]}
+                                               ;{:file     "vendor-js/firebase/firebase-storage.js"
+                                               ; :requires ["vendor.firebase.app"]
+                                               ; :provides ["vendor.firebase.storage"]}
+                                               ]
+                               :externs       ["vendor-js/firebase/firebase-app-externs.js"
+                                               "vendor-js/firebase/firebase-database-externs.js"
+                                               ;"vendor-js/firebase/firebase-auth-externs.js"
+                                               ;"vendor-js/firebase/firebase-storage-externs.js"
+                                               ]}}
 
                :txactor
                {:source-paths ["src/ferno/txactor"]
                 :compiler     {:target        :nodejs
-                               :main          "ferno.txactor.core"
+                               :main          ferno.txactor.core
                                :output-to     "resources/build/ferno-txactor/txactor.js"
                                :output-dir    "resources/build/ferno-txactor"
                                :npm-deps      {:firebase-admin "5.2.1"}
