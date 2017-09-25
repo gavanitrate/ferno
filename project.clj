@@ -34,7 +34,7 @@
                {:source-paths ["src/ferno/client" "env/dev/cljs"]
                 :compiler     {:main          ferno.dev
                                :output-to     "resources/public/js/app.js"
-                               :output-dir    "target/public/js/out"
+                               :output-dir    "resources/public/js/out"
                                :asset-path    "js/out"
                                :source-map    true
                                :optimizations :none
@@ -48,24 +48,7 @@
                                :output-to     "resources/public/js/app.js"
                                :output-dir    "target/public/js/release"
                                :optimizations :advanced
-                               :pretty-print  false
-                               :foreign-libs  [{:file     "vendor-js/firebase/firebase-app.js"
-                                                :provides ["vendor.firebase.app"]}
-                                               {:file     "vendor-js/firebase/firebase-database.js"
-                                                :requires ["vendor.firebase.app"]
-                                                :provides ["vendor.firebase.database"]}
-                                               ;{:file     "vendor-js/firebase/firebase-auth.js"
-                                               ; :requires ["vendor.firebase.app"]
-                                               ; :provides ["vendor.firebase.auth"]}
-                                               ;{:file     "vendor-js/firebase/firebase-storage.js"
-                                               ; :requires ["vendor.firebase.app"]
-                                               ; :provides ["vendor.firebase.storage"]}
-                                               ]
-                               :externs       ["vendor-js/firebase/firebase-app-externs.js"
-                                               "vendor-js/firebase/firebase-database-externs.js"
-                                               ;"vendor-js/firebase/firebase-auth-externs.js"
-                                               ;"vendor-js/firebase/firebase-storage-externs.js"
-                                               ]}}
+                               :pretty-print  false}}
 
                :txactor
                {:source-paths ["src/ferno/txactor"]
