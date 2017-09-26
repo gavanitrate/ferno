@@ -8,123 +8,122 @@
 (defonce state (r/atom nil))
 
 (defn transaction-tester [data]
-  [:div.card.query-tester-component
-   [:div.card-header [:p.card-header-title "Transaction Tester"]]
-   [:div.card-content
-    [:div.message
-     [:div.message-header "TX Data"]
-     [:div.message-body
-      [ui/textarea (:tx-data data)
-       {:on-change (fn [v] (swap! state assoc :tx-data v))}]
+  [:div.box
+   [:p.subtitle "Transaction Tester"]
+   [:div.field
+    [:label.label "TX Data"]
+    [ui/textarea (:tx-data data)
+     {:on-change (fn [v] (swap! state assoc :tx-data v))}]]
+   [:div.field.is-horizontal
+    [:label.label "Prefills"]
+    [:div.field-body
+     [:div.field.is-grouped.is-grouped-right
+      [:div.control
+       [:button.button.is-small
+        {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}]")}
+        ":person/name"]]
+      [:div.control
+       [:button.button.is-small
+        {:on-click #(swap! state assoc :tx-data "[[:db/retract 1 :person/name \"Greg Davies\"]]")}
+        ":db/retract"]]
+      [:div.control
+       [:button.button.is-small
+        {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}\n[:db/retract 1 :person/name \"Greg Davies\"]]")}
+        "both"]]]]]
 
-      [:div.level.push-up
-       [:div.level-left
-        [:label.level-item "Prefill"]]
-       [:div.level-right
+   (try
+     (when-let [tx-data (-> data :tx-data reader/read-string)]
+       [:div.field.is-grouped.is-grouped-centered
         [:div.field.is-grouped
          [:div.control
-          [:button.button.is-small
-           {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}]")}
-           ":person/name"]]
+          [:button.button.is-primary
+           {:on-click #(db/transact tx-data)}
+           "Transact Remotely"]]
          [:div.control
-          [:button.button.is-small
-           {:on-click #(swap! state assoc :tx-data "[[:db/retract 1 :person/name \"Greg Davies\"]]")}
-           ":db/retract"]]
-         [:div.control
-          [:button.button.is-small
-           {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}\n[:db/retract 1 :person/name \"Greg Davies\"]]")}
-           "both"]]
-         ]]]]]
-
-    (try
-      (when-let [tx-data (-> data :tx-data reader/read-string)]
-        [:div.level.push-up
-         [:div.level-left]
-         [:div.level-right
-          [:div.field.is-grouped
-           [:div.control
-            [:button.button.is-primary
-             {:on-click #(db/transact tx-data)}
-             "Transact Remotely"]]
-           [:div.control
-            [:button.button.is-danger
-             {:on-click #(p/transact! db/cnx tx-data)}
-             "Transact Locally"]]]]])
-      (catch js/Error e))]])
+          [:button.button.is-danger
+           {:on-click #(p/transact! db/cnx tx-data)}
+           "Transact Locally"]]]])
+     (catch js/Error e))])
 
 (defn query-tester [data]
-  [:div.card.query-tester-component
-   [:div.card-header [:p.card-header-title "Query Tester"]]
-   [:div.card-content
-    [:div.message
-     [:div.message-header "Query String"]
-     [:div.message-body
-      [ui/textarea (:query data)
-       {:on-change (fn [v] (swap! state assoc :query v))}]
+  [:div.box
+   [:p.subtitle "Query Tester"]
+   [:div.field
+    [:label.label "Query String"]
+    [ui/textarea (:query data)
+     {:on-change (fn [v] (swap! state assoc :query v))}]]
+   [:div.field.is-horizontal
+    [:label.label "Prefills"]
+    [:div.field-body
+     [:div.field.is-grouped.is-grouped-right
+      [:div.control
+       [:button.button.is-small
+        {:on-click #(swap! state assoc :query "[:find ?e ?name\n:where\n[?e :person/name ?name]]")}
+        ":person/name"]]]]]
 
-      [:div.level.push-up
-       [:div.level-left
-        [:label.level-item "Prefill"]]
-       [:div.level-right
-        [:button.button.is-small
-         {:on-click #(swap! state assoc :query "[:find ?e ?name\n:where\n[?e :person/name ?name]]")}
-         ":person/name"]]]]]
+   (when (:query data)
+     (try
+       (let [q      (-> data :query reader/read-string)
+             result @(p/q q db/cnx)]
+         [:div.message.is-success
+          [:div.message-header "Query Result"]
+          [:div.message-body [ui/inspect result]]])
 
-    (when (:query data)
-      (try
-        (let [q      (-> data :query reader/read-string)
-              result @(p/q q db/cnx)]
-          [:div.message.is-success
-           [:div.message-header "Query Result"]
-           [:div.message-body [ui/inspect result]]])
-
-        (catch js/Error e
-          [:div.message.is-danger
-           [:div.message-header "Query Error"]
-           [:div.message-body [ui/inspect e]]])))]])
+       (catch js/Error e
+         [:div.message.is-danger
+          [:div.message-header "Query Error"]
+          [:div.message-body [ui/inspect e]]])))])
 
 (defn pull-tester [data]
-  [:div.card.query-tester-component
-   [:div.card-header [:p.card-header-title "Pull Tester"]]
-   [:div.card-content
+  [:div.box
+   [:p.subtitle "Pull Tester"]
 
-    [:div.message
-     [:div.message-header "Entity ID"]
-     [:div.message-body
-      [ui/input (:pull-id data)
-       {:on-change (fn [v] (swap! state assoc :pull-id v))}]]]
+   [:div.field
+    [:label.label "Entity ID"]
+    [:div.control
+     [ui/input (:pull-id data)
+      {:on-change (fn [v] (swap! state assoc :pull-id v))}]]]
 
-    [:div.message
-     [:div.message-header "Pull Query"]
-     [:div.message-body
-      [ui/textarea (:pull-query data)
-       {:on-change (fn [v] (swap! state assoc :pull-query v))}]
+   [:div.field
+    [:label.label "Pull Query"]
+    [ui/textarea (:pull-query data)
+     {:on-change (fn [v] (swap! state assoc :pull-query v))}]]
 
-      [:div.level.push-up
-       [:div.level-left
-        [:label.level-item "Prefill"]]
+   [:div.field.is-horizontal
+    [:label.label "Prefills"]
+    [:div.field-body
+     [:div.field.is-grouped.is-grouped-right
+      [:div.control
        [:div.level-right
         [:button.button.is-small
          {:on-click #(swap! state assoc :pull-query "[*]")}
-         "*"]]]]]
+         "*"]]]]]]
 
-    (when (:pull-query data)
-      (try
-        (let [pid    (int (:pull-id data))
-              q      (-> data :pull-query reader/read-string)
-              result @(p/pull db/cnx q pid)]
-          [:div.message.is-success
-           [:div.message-header "Query Result"]
-           [:div.message-body [ui/inspect result]]])
+   (when (:pull-query data)
+     (try
+       (let [pid    (int (:pull-id data))
+             q      (-> data :pull-query reader/read-string)
+             result @(p/pull db/cnx q pid)]
+         [:div.message.is-success
+          [:div.message-header "Query Result"]
+          [:div.message-body [ui/inspect result]]])
 
-        (catch js/Error e
-          [:div.message.is-danger
-           [:div.message-header "Query Error"]
-           [:div.message-body [ui/inspect e]]])))]])
+       (catch js/Error e
+         [:div.message.is-danger
+          [:div.message-header "Query Error"]
+          [:div.message-body [ui/inspect e]]])))])
 
 (defn page-component []
   (let [data @state]
     [:div.container.page
-     [transaction-tester data]
-     [query-tester data]
-     [pull-tester data]]))
+     [:div.tile.is-ancestor
+      [:div.tile.is-6.is-vertical.is-parent
+       [:div.tile.is-child
+        [transaction-tester data]]
+       [:div.tile.is-child
+        [query-tester data]]]
+      [:div.tile.is-parent
+       [:div.tile.is-child
+        [pull-tester data]]]]
+
+     ]))

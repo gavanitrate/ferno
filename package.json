@@ -3,7 +3,8 @@
     "nodemon-txactor": "nodemon ./resources/build/ferno-txactor/txactor.js",
     "build-sass": "node-sass src/ferno/client/styles/client.scss -o resources/public/css",
     "watch-sass": "node-sass -w src/ferno/client/styles/client.scss -o resources/public/css",
-    "serve-client": "http-server ./resources/public -o"
+    "serve-client": "http-server ./resources/public -o",
+    "deploy-client": "firebase deploy --only hosting"
   },
   "dependencies": {
     "@cljs-oss/module-deps": "^1.1.1",

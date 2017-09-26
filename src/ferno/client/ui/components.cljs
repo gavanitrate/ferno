@@ -19,4 +19,5 @@
 
 (defn inspect [x]
   [:div.inspect-block
-   [:pre [:code (with-out-str (cljs.pprint/pprint x))]]])
+   [:pre
+    [:code (with-out-str (cljs.pprint/pprint x))]]])
