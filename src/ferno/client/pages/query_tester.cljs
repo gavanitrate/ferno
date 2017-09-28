@@ -20,16 +20,17 @@
      [:div.field.is-grouped.is-grouped-right
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}]")}
-        ":person/name"]]
+        {:on-click #(swap! state assoc :tx-data "[{:person/name \"Gavan Singh\"\n:person/age 22\n:person/height 179\n:person/eye-colour :brown}]")}
+        ":person"]]
+
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :tx-data "[[:db/retract 1 :person/name \"Greg Davies\"]]")}
+        {:on-click #(swap! state assoc :tx-data "[[:db/retract 1 :person/age 22]]")}
         ":db/retract"]]
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :tx-data "[{:person/name \"Greg Davies\"}\n[:db/retract 1 :person/name \"Greg Davies\"]]")}
-        "both"]]]]]
+        {:on-click #(swap! state assoc :tx-data "[[:db.fn/retractEntity 1]]")}
+        ":db.fn/retractEntity"]]]]]
 
    (try
      (when-let [tx-data (-> data :tx-data reader/read-string)]
@@ -124,6 +125,4 @@
         [query-tester data]]]
       [:div.tile.is-parent
        [:div.tile.is-child
-        [pull-tester data]]]]
-
-     ]))
+        [pull-tester data]]]]]))

@@ -4,5 +4,9 @@
 (defonce transit-writer (t/writer :json))
 (defonce transit-reader (t/reader :json))
 
-(defn encode [x] (t/write transit-writer x))
-(defn decode [x] (when x (t/read transit-reader x)))
+(defn encode
+  "Encode data into transit format."
+  [x] (t/write transit-writer x))
+(defn decode
+  "Decode data form transit format back to Clojure structures."
+  [x] (when x (t/read transit-reader x)))

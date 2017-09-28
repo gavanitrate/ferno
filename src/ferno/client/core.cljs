@@ -1,5 +1,6 @@
 (ns ferno.client.core
   (:require [reagent.core :as r]
+            [ferno.client.db :as db]
             [ferno.client.ui.navbar :refer [navbar]]
             [ferno.client.pages.query-tester :as query-tester]))
 
@@ -12,4 +13,5 @@
   (r/render [main] (.getElementById js/document "app")))
 
 (defn init! []
+  (db/start)
   (mount-root))

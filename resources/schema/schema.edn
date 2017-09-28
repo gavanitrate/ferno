@@ -1,0 +1,2 @@
+{:person/friend {:db/cardinality :db.cardinality/one
+                 :db/valueType   :db.type/ref}}

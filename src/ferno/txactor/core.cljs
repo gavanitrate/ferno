@@ -12,6 +12,6 @@
       (println "TXACTOR")
       (println "STARTUP -" (-> (DateTime.) .toUTCIsoString))
       (println "---------------------------------------------")
-      (db/start-listening))
+      (db/start))
 
 (set! *main-cli-fn* -main)
