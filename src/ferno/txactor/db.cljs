@@ -92,7 +92,7 @@
 
 (defn flatten-tx-data
   "Return a reduced list of datoms.
-  Each datom is hashed according to it's entity ID and attribute (ea-hash).
+  Each datom is hashed according to it's entity ID, attribute and value (eav-hash).
   This hash is used as the key and the datom is stored as the value.
   Following datoms with the same entity ID and attribute will overwrite previous ones.
   The result returned is a map of datoms corresponding to their ea-hashs.
@@ -102,7 +102,7 @@
   (reduce
     (fn [snapshot-map datom]
       (assoc snapshot-map
-        (ferno.db/ea-hash datom)
+        (ferno.db/eav-hash datom)
         datom))
     {} tx-data))
 
@@ -125,12 +125,11 @@
                        (d/transact! @cnx)
                        :tx-data
                        flatten-tx-data)]
-    ;; log it out
-    (println "Processing" (-> ss .-key))
-    (pprint flattened)
 
+    (println "Processing" (-> ss .-key))
     ;; process each datom
     (doseq [datom flattened]
+      (println datom)
       (process-datom! fb/database datom))
 
     ;; remove the data from Firebase
@@ -156,4 +155,5 @@
   (process-schema)
   (get-datoms-list)
   (process-datoms-list)
-  (listen-tx-queue))
+  (listen-tx-queue)
+  )

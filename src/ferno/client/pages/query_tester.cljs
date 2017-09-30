@@ -5,7 +5,27 @@
             [ferno.client.db :as db]
             [ferno.client.ui.components :as ui]))
 
-(defonce state (r/atom nil))
+(defonce page-state (r/atom nil))
+
+(def prefills
+  {:tx/person      [{:person/name   "Gavan Singh"
+                     :person/age    22
+                     :person/gender :gender/male}]
+   :tx/region      [{:region/coordinates {:coordinate/lat 1 :coordinate/lng 1}
+                     :region/activities  [{:activity/type :activity/eat}
+                                          {:activity/type :activity/shop}
+                                          {:activity/type :activity/work}]
+                     :region/sheltered   true
+                     :region/temperature 24
+                     :region/noise       :noise/quiet}]
+   :q/person-name  '[:find ?e ?name
+                     :where
+                     [?e :person/name ?name]]
+   :q/region-coord '[:find ?e
+                     :where
+                     [?e :region/coordinates]]
+   :p/all          '[*]
+   })
 
 (defn transaction-tester [data]
   [:div.box
@@ -13,23 +33,24 @@
    [:div.field
     [:label.label "TX Data"]
     [ui/textarea (:tx-data data)
-     {:on-change (fn [v] (swap! state assoc :tx-data v))}]]
+     {:on-change (fn [v] (swap! page-state assoc :tx-data v))
+      :rows      8}]]
    [:div.field.is-horizontal
     [:label.label "Prefills"]
     [:div.field-body
      [:div.field.is-grouped.is-grouped-right
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :tx-data "[{:person/name \"Gavan Singh\"\n:person/age 22\n:person/height 179\n:person/eye-colour :brown}]")}
+        {:on-click #(swap! page-state assoc :tx-data (-> prefills :tx/person str))}
         ":person"]]
 
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :tx-data "[[:db/retract 1 :person/age 22]]")}
-        ":db/retract"]]
+        {:on-click #(swap! page-state assoc :tx-data (-> prefills :tx/region str))}
+        ":region"]]
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :tx-data "[[:db.fn/retractEntity 1]]")}
+        {:on-click #(swap! page-state assoc :tx-data "[[:db.fn/retractEntity 1]]")}
         ":db.fn/retractEntity"]]]]]
 
    (try
@@ -42,7 +63,7 @@
            "Transact Remotely"]]
          [:div.control
           [:button.button.is-danger
-           {:on-click #(p/transact! db/cnx tx-data)}
+           {:on-click #(p/transact! (db/cnx) tx-data)}
            "Transact Locally"]]]])
      (catch js/Error e))])
 
@@ -52,21 +73,25 @@
    [:div.field
     [:label.label "Query String"]
     [ui/textarea (:query data)
-     {:on-change (fn [v] (swap! state assoc :query v))}]]
+     {:on-change (fn [v] (swap! page-state assoc :query v))}]]
    [:div.field.is-horizontal
     [:label.label "Prefills"]
     [:div.field-body
      [:div.field.is-grouped.is-grouped-right
       [:div.control
        [:button.button.is-small
-        {:on-click #(swap! state assoc :query "[:find ?e ?name\n:where\n[?e :person/name ?name]]")}
-        ":person/name"]]]]]
+        {:on-click #(swap! page-state assoc :query (-> prefills :q/person-name str))}
+        ":person/name"]]
+      [:div.control
+       [:button.button.is-small
+        {:on-click #(swap! page-state assoc :query (-> prefills :q/region-coord str))}
+        ":region"]]]]]
 
    (when (:query data)
      (try
        (let [q      (-> data :query reader/read-string)
-             result @(p/q q db/cnx)]
-         [:div.message.is-success
+             result @(p/q q (db/cnx))]
+         [:div.message.is-warning
           [:div.message-header "Query Result"]
           [:div.message-body [ui/inspect result]]])
 
@@ -83,12 +108,12 @@
     [:label.label "Entity ID"]
     [:div.control
      [ui/input (:pull-id data)
-      {:on-change (fn [v] (swap! state assoc :pull-id v))}]]]
+      {:on-change (fn [v] (swap! page-state assoc :pull-id v))}]]]
 
    [:div.field
     [:label.label "Pull Query"]
     [ui/textarea (:pull-query data)
-     {:on-change (fn [v] (swap! state assoc :pull-query v))}]]
+     {:on-change (fn [v] (swap! page-state assoc :pull-query v))}]]
 
    [:div.field.is-horizontal
     [:label.label "Prefills"]
@@ -97,15 +122,15 @@
       [:div.control
        [:div.level-right
         [:button.button.is-small
-         {:on-click #(swap! state assoc :pull-query "[*]")}
+         {:on-click #(swap! page-state assoc :pull-query (-> prefills :p/all str))}
          "*"]]]]]]
 
    (when (:pull-query data)
      (try
        (let [pid    (int (:pull-id data))
              q      (-> data :pull-query reader/read-string)
-             result @(p/pull db/cnx q pid)]
-         [:div.message.is-success
+             result @(p/pull (db/cnx) q pid)]
+         [:div.message.is-warning
           [:div.message-header "Query Result"]
           [:div.message-body [ui/inspect result]]])
 
@@ -115,14 +140,15 @@
           [:div.message-body [ui/inspect e]]])))])
 
 (defn page-component []
-  (let [data @state]
+  (let [data @page-state]
     [:div.container.page
-     [:div.tile.is-ancestor
-      [:div.tile.is-6.is-vertical.is-parent
-       [:div.tile.is-child
-        [transaction-tester data]]
-       [:div.tile.is-child
-        [query-tester data]]]
-      [:div.tile.is-parent
-       [:div.tile.is-child
-        [pull-tester data]]]]]))
+     [ui/loader @db/cnx-atom
+      [:div.tile.is-ancestor
+       [:div.tile.is-6.is-vertical.is-parent
+        [:div.tile.is-child
+         [transaction-tester data]]
+        [:div.tile.is-child
+         [query-tester data]]]
+       [:div.tile.is-parent
+        [:div.tile.is-child
+         [pull-tester data]]]]]]))

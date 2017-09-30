@@ -19,4 +19,4 @@
          :target "_blank"}
         [:span [:span.icon [:i.fa.fa-database]] "Firebase"]]]]
 
-     [:a.navbar-item [:span.icon.has-text-success [:i.fa.fa-circle]]]]]])
+     [:a.navbar-item [:span.icon.has-text-primary [:i.fa.fa-circle]]]]]])

@@ -1,5 +1,13 @@
-div.inspect-block {
+div.inspect-component {
   pre {
     white-space: pre-wrap;
+  }
+}
+
+.loader-component {
+
+  .default-loader-content {
+    background: $orange;
+    padding: 1em;
   }
 }

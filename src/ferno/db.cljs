@@ -5,12 +5,13 @@
 
 ;; datom helpers
 
-(defn ea-hash
-  "Create a hash of a datom's entity ID and attribute."
+(defn eav-hash
+  "Create a hash of a datom's entity ID, attribute and value."
   [datom]
   (let [e (.-e datom)
-        a (.-a datom)]
-    (hash {:e e :a a})))
+        a (.-a datom)
+        v (.-v datom)]
+    (hash {:e e :a a :v v})))
 
 (defn datom->clj
   "Transform a Datom object into a Clojure(script) map."

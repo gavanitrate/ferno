@@ -1,2 +1,35 @@
-{:person/friend {:db/cardinality :db.cardinality/one
-                 :db/valueType   :db.type/ref}}
+{
+ ;; coordinates
+ :coordinate/lat     {:db/cardinality :db.cardinality/one}
+ :coordinate/lng     {:db/cardinality :db.cardinality/one}
+
+ ;; activity
+ :activity/type      {:db/cardinality :db.cardinality/one}
+ :travel/to          {:db/cardinality :db.cardinality/one
+                      :db/valueType   :db.type/ref}
+ :travel/todo        {:db/cardinality :db.cardinality/one
+                      :db/isComponent true
+                      :db/valueType   :db.type/ref}
+
+ ;; person
+ :person/name        {:db/cardinality :db.cardinality/one}
+ :person/age         {:db/cardinality :db.cardinality/one}
+ :person/gender      {:db/cardinality :db.cardinality/one}
+ :person/location    {:db/cardinality :db.cardinality/one
+                      :db/valueType   :db.type/ref}
+ :person/activity    {:db/cardinality :db.cardinality/one
+                      :db/isComponent true
+                      :db/valueType   :db.type/ref}
+
+ ;; region
+ :region/coordinates {:db/cardinality :db.cardinality/one
+                      :db/valueType   :db.type/ref
+                      :db/isComponent true}
+ :region/activities  {:db/cardinality :db.cardinality/many
+                      :db/valueType   :db.type/ref
+                      :db/isComponent true}
+ :region/sheltered   {:db/cardinality :db.cardinality/one}
+ :region/temperature {:db/cardinality :db.cardinality/one}
+ :region/noise       {:db/cardinality :db.cardinality/one}
+
+ }
