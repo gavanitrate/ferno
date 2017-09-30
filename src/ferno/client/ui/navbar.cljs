@@ -6,7 +6,7 @@
    [:div.navbar-brand
     [:a.navbar-item
      {:on-click #(println "home")}
-     "Ferno"]]
+     [:img {:src "/img/fernotext-120.png"}]]]
    [:div.navbar-menu
     [:div.navbar-start]
 

@@ -36,7 +36,7 @@
                     (fn [ss]
                       (let [txs (ferno.db/sync-add-tx cnx (-> ss .toJSON js->clj))]
                         (p/transact! cnx txs)
-                        (println "Added ::" txs))))))))
+                        (println "Addition ::" txs))))))))
 
 (defn listen-to-changes!
   "Start listening to child_changed events on Firebase ref: /datoms
@@ -51,7 +51,7 @@
                     (fn [ss]
                       (let [txs (ferno.db/sync-add-tx cnx (-> ss .toJSON js->clj))]
                         (p/transact! cnx txs)
-                        (println "Added ::" txs))))))))
+                        (println "Change ::" txs))))))))
 
 (defn listen-to-retracts!
   "Start listening to child_removed events on Firebase ref: /datoms
@@ -66,7 +66,7 @@
                     (fn [ss]
                       (let [txs (ferno.db/sync-retract-tx cnx (-> ss .toJSON js->clj))]
                         (p/transact! cnx txs)
-                        (println "Removed ::" txs))))))))
+                        (println "Retraction ::" txs))))))))
 
 (defn start []
   (listen-to-adds!)
