@@ -1,0 +1,44 @@
+[
+ {:region/name        "Onety one"
+  :region/activities  [{:activity/type :eat}
+                       {:activity/type :shop}
+                       {:activity/type :work}]
+  :region/coordinates {:coordinate/lat 1 :coordinate/lng 1}
+  :region/noise       28
+  :region/sheltered   true
+  :region/temperature 24}
+ {:region/name        "Onety two"
+  :region/activities  [{:activity/type :drink}
+                       {:activity/type :eat}
+                       {:activity/type :dance}
+                       {:activity/type :billiards}]
+  :region/coordinates {:coordinate/lat 1 :coordinate/lng 2}
+  :region/noise       78
+  :region/sheltered   false
+  :region/temperature 34}
+ {:db/id              -100
+  :region/name        "Gavan's Home"
+  :region/activities  [{:activity/type :sleep}
+                       {:activity/type :wash}
+                       {:activity/type :eat}
+                       {:activity/type :play}
+                       {:activity/type :listen-music}]
+  :region/coordinates {:coordinate/lat 2 :coordinate/lng 1}
+  :region/noise       41
+  :region/sheltered   true
+  :region/temperature 23}
+ {:region/name        "Twoty two"
+  :region/activities  [{:activity/type :eat}
+                       {:activity/type :drink}
+                       {:activity/type :work}]
+  :region/coordinates {:coordinate/lat 2 :coordinate/lng 2}
+  :region/noise       32
+  :region/sheltered   true
+  :region/temperature 24}
+
+ {:person/name     "Gavan Singh"
+  :person/age      22
+  :person/gender   :male
+  :person/location -100
+  :person/activity {:activity/type :listen-music}}
+ ]

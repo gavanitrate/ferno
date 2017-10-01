@@ -6,7 +6,7 @@
             [ferno.transit :as transit]
             [ferno.db :as ferno.db])
   (:require-macros
-    [ferno.txactor.macros :refer [schema-edn]]))
+    [ferno.macros :refer [schema-edn]]))
 
 ;; async channel
 ;; used to pass messages around to several components
@@ -17,6 +17,10 @@
 
 (defonce cnx (atom nil))
 
+(defn connect []
+  (-> fb/database
+      (.ref "/txactor/up")
+      (.set true)))
 
 ;; schema
 
@@ -151,6 +155,7 @@
 
 
 (defn start []
+  (connect)
   (get-schema)
   (process-schema)
   (get-datoms-list)

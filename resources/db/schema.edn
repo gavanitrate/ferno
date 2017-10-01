@@ -22,6 +22,7 @@
                       :db/valueType   :db.type/ref}
 
  ;; region
+ :region/name        {:db/cardinality :db.cardinality/one}
  :region/coordinates {:db/cardinality :db.cardinality/one
                       :db/valueType   :db.type/ref
                       :db/isComponent true}

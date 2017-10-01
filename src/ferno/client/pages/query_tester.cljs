@@ -3,7 +3,9 @@
             [reagent.core :as r]
             [posh.reagent :as p]
             [ferno.client.db :as db]
-            [ferno.client.ui.components :as ui]))
+            [ferno.client.ui.components :as ui])
+  (:require-macros
+    [ferno.macros :refer [seed-edn]]))
 
 (defonce page-state (r/atom nil))
 
@@ -21,11 +23,10 @@
    :q/person-name  '[:find ?e ?name
                      :where
                      [?e :person/name ?name]]
-   :q/region-coord '[:find ?e
+   :q/region-coord '[:find ?e ?name
                      :where
-                     [?e :region/coordinates]]
-   :p/all          '[*]
-   })
+                     [?e :region/name ?name]]
+   :p/all          '[*]})
 
 (defn transaction-tester [data]
   [:div.box
@@ -41,9 +42,12 @@
      [:div.field.is-grouped.is-grouped-right
       [:div.control
        [:button.button.is-small
+        {:on-click #(swap! page-state assoc :tx-data (-> (seed-edn) str))}
+        "seed"]]
+      [:div.control
+       [:button.button.is-small
         {:on-click #(swap! page-state assoc :tx-data (-> prefills :tx/person str))}
         ":person"]]
-
       [:div.control
        [:button.button.is-small
         {:on-click #(swap! page-state assoc :tx-data (-> prefills :tx/region str))}
@@ -139,10 +143,12 @@
           [:div.message-header "Query Error"]
           [:div.message-body [ui/inspect e]]])))])
 
-(defn page-component []
-  (let [data @page-state]
+(defn page-component [env]
+  (let [{:keys [state]} env
+        data @page-state
+        cnx  @db/cnx-atom]
     [:div.container.page
-     [ui/loader @db/cnx-atom
+     [ui/loader cnx
       [:div.tile.is-ancestor
        [:div.tile.is-6.is-vertical.is-parent
         [:div.tile.is-child

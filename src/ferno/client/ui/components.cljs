@@ -15,8 +15,7 @@
    {:value     value
     :on-change (fn [e] (when on-change (on-change (e->val e))))
     :cols      (when cols cols)
-    :rows      (when rows rows)
-    }])
+    :rows      (when rows rows)}])
 
 (defn inspect [x]
   [:div.inspect-component
@@ -36,3 +35,7 @@
    (if loaded?
      child
      [:div.loader-component loader-content])))
+
+(defn yorn [bool]
+  [:span.icon
+   (if bool [:i.fa.fa-check] [:i.fa.fa-times])])

@@ -1,7 +1,7 @@
 (ns ferno.txactor.firebase
   (:require [firebase-admin :as fb])
   (:require-macros
-    [ferno.txactor.macros :refer [firebase-service-account]]))
+    [ferno.macros :refer [firebase-service-account]]))
 
 ;; firebase credentials
 
