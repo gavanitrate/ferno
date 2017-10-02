@@ -11,6 +11,11 @@
                       :db/isComponent true
                       :db/valueType   :db.type/ref}
 
+ ;; preference
+ :preference/type    {:db/cardinality :db.cardinality/one}
+ :preference/max     {:db/cardinality :db.cardinality/one}
+ :preference/min     {:db/cardinality :db.cardinality/one}
+
  ;; person
  :person/name        {:db/cardinality :db.cardinality/one}
  :person/age         {:db/cardinality :db.cardinality/one}
@@ -18,6 +23,9 @@
  :person/location    {:db/cardinality :db.cardinality/one
                       :db/valueType   :db.type/ref}
  :person/activity    {:db/cardinality :db.cardinality/one
+                      :db/isComponent true
+                      :db/valueType   :db.type/ref}
+ :person/preferences {:db/cardinality :db.cardinality/many
                       :db/isComponent true
                       :db/valueType   :db.type/ref}
 

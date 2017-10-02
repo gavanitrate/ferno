@@ -143,6 +143,18 @@
           [:div.message-header "Query Error"]
           [:div.message-body [ui/inspect e]]])))])
 
+(defn generators []
+  [:div.box
+   [:p.subtitle "Generators"]
+   [:div.field.is-horizontal
+    [:div.field-body
+     [:div.field.is-grouped
+      [:div.control
+       [:div.level-right
+        [:button.button.is-small
+         {:on-click #(println "person/location change")}
+         ":person/location"]]]]]]])
+
 (defn page-component [env]
   (let [{:keys [state]} env
         data @page-state
@@ -154,7 +166,9 @@
         [:div.tile.is-child
          [transaction-tester data]]
         [:div.tile.is-child
-         [query-tester data]]]
+         [query-tester data]]
+        [:div.tile.is-child
+         [generators data]]]
        [:div.tile.is-parent
         [:div.tile.is-child
          [pull-tester data]]]]]]))
