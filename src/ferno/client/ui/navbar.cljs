@@ -29,4 +29,9 @@
         [:span [:span.icon [:i.fa.fa-database]] "Firebase"]]
        ]]
 
-     [:a.navbar-item [:span.icon.has-text-primary [:i.fa.fa-circle]]]]]])
+     (let [txactor-status (-> @st/state-atom :txactor :up)
+           up?            (true? txactor-status)]
+       [:a.navbar-item
+        [:span.icon
+         {:class (when up? "has-text-primary")}
+         [:i.fa.fa-circle]]])]]])

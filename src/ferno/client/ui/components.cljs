@@ -36,6 +36,8 @@
      child
      [:div.loader-component loader-content])))
 
-(defn yorn [bool]
+(defn yorn [yes]
   [:span.icon
-   (if bool [:i.fa.fa-check] [:i.fa.fa-times])])
+   (if yes
+     [:i.fa.fa-check]
+     [:i.fa.fa-times])])

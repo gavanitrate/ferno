@@ -1,6 +1,7 @@
 (ns ferno.client.firebase
   (:require [vendor.firebase.app]
-            [vendor.firebase.database]))
+            [vendor.firebase.database]
+            [ferno.client.state :as st]))
 
 (defonce fb-config
          {:apiKey            "AIzaSyAzl-3YjRh4kF4dQ7wz6pkVSZtMhuV1u5g"
@@ -15,3 +16,9 @@
 (defonce fb-app js/firebase)
 
 (def database (-> fb-app .database))
+
+(defonce tx-status
+         (-> database
+             (.ref "txactor/up")
+             (.on "value" (fn [ss] (swap! st/state-atom
+                                          assoc-in [:txactor :up] (.val ss))))))

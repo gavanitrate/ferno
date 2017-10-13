@@ -1,0 +1,19 @@
+.region-map {
+  display: flex;
+  flex-direction: column;
+
+  .regions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .region {
+      //width: 600px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+  }
+}

@@ -1,22 +1,27 @@
 [
- {:region/name        "Onety one"
+ ;; regions
+ ;; ---------------------------------------------------------------------
+
+ {:db/id              -1100
+  :region/name        "Maverick Square"
   :region/activities  [{:activity/type :eat}
                        {:activity/type :shop}
                        {:activity/type :work}]
   :region/coordinates {:coordinate/lat 1 :coordinate/lng 1}
-  :region/noise       28
-  :region/sheltered   true
+  :region/noise       31
+  :region/sheltered   false
   :region/temperature 24}
- {:region/name        "Onety two"
+ {:db/id              -1200
+  :region/name        "Gaze"
   :region/activities  [{:activity/type :drink}
                        {:activity/type :eat}
                        {:activity/type :dance}
                        {:activity/type :billiards}]
   :region/coordinates {:coordinate/lat 1 :coordinate/lng 2}
   :region/noise       78
-  :region/sheltered   false
-  :region/temperature 34}
- {:db/id              -100
+  :region/sheltered   true
+  :region/temperature 29}
+ {:db/id              -1300
   :region/name        "Gavan's Home"
   :region/activities  [{:activity/type :sleep}
                        {:activity/type :wash}
@@ -27,7 +32,8 @@
   :region/noise       41
   :region/sheltered   true
   :region/temperature 23}
- {:region/name        "Twoty two"
+ {:db/id              -1400
+  :region/name        "Mitchel and Glove"
   :region/activities  [{:activity/type :eat}
                        {:activity/type :drink}
                        {:activity/type :work}]
@@ -36,9 +42,94 @@
   :region/sheltered   true
   :region/temperature 24}
 
+
+ ;; people
+ ;; ---------------------------------------------------------------------
+
  {:person/name     "Gavan Singh"
   :person/age      22
   :person/gender   :male
-  :person/location -100
+  :person/location -1300
   :person/activity {:activity/type :listen-music}}
+
+ ;; market
+ {:person/name     "Henry Eamonds"
+  :person/age      32
+  :person/gender   :male
+  :person/location -1100
+  :person/activity {:activity/type :shop}}
+ {:person/name     "Christopher Harman"
+  :person/age      31
+  :person/gender   :male
+  :person/location -1100
+  :person/activity {:activity/type :shop}}
+ {:person/name     "Olive McKendra"
+  :person/age      26
+  :person/gender   :female
+  :person/location -1100
+  :person/activity {:activity/type :work}}
+
+ ;; pub
+ {:person/name     "Imogen Kardif"
+  :person/age      23
+  :person/gender   :female
+  :person/location -1200
+  :person/activity {:activity/type :drink}}
+ {:person/name     "Emily Dornal"
+  :person/age      25
+  :person/gender   :female
+  :person/location -1200
+  :person/activity {:activity/type :dance}}
+ {:person/name     "Kate Winchester"
+  :person/age      33
+  :person/gender   :female
+  :person/location -1200
+  :person/activity {:activity/type :work}}
+ {:person/name     "Quin Van Khrit"
+  :person/age      21
+  :person/gender   :female
+  :person/location -1200
+  :person/activity {:activity/type :drink}}
+ {:person/name     "Duncan Runt"
+  :person/age      23
+  :person/gender   :male
+  :person/location -1200
+  :person/activity {:activity/type :dance}}
+ {:person/name     "Ulysis Taindsman"
+  :person/age      25
+  :person/gender   :male
+  :person/location -1200
+  :person/activity {:activity/type :billiards}}
+ {:person/name     "Jennifer Landrey"
+  :person/age      21
+  :person/gender   :female
+  :person/location -1200
+  :person/activity {:activity/type :work}}
+ {:person/name     "Lincoln Reverence"
+  :person/age      27
+  :person/gender   :male
+  :person/location -1200
+  :person/activity {:activity/type :dance}}
+
+ ;; restaurant
+ {:person/name     "John Lowings"
+  :person/age      45
+  :person/gender   :male
+  :person/location -1400
+  :person/activity {:activity/type :eat}}
+ {:person/name     "Barbara Lowings"
+  :person/age      46
+  :person/gender   :female
+  :person/location -1400
+  :person/activity {:activity/type :eat}}
+ {:person/name     "James Kisp"
+  :person/age      22
+  :person/gender   :male
+  :person/location -1400
+  :person/activity {:activity/type :eat}}
+ {:person/name     "Jenna Finders"
+  :person/age      22
+  :person/gender   :female
+  :person/location -1400
+  :person/activity {:activity/type :drink}}
  ]

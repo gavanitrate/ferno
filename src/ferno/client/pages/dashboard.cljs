@@ -11,26 +11,26 @@
 (defn region-attrs [region]
   [:div.notification
    [:label.label "Attributes"]
-   [:div.field.is-grouped
+   [:div.field.is-grouped.is-multiline
     [:div.control
      [:div.tags.has-addons
-      [:span.tag.is-warning.is-large
+      [:span.tag.is-warning
        [:span.icon [:i.fa.fa-sun-o]]]
-      [:span.tag.is-dark.is-large
+      [:span.tag.is-dark
        [:span.icon
         (if (-> region :region/sheltered not)
           [:i.fa.fa-check] [:i.fa.fa-times])]]]]
     [:div.control
      [:div.tags.has-addons
-      [:span.tag.is-danger.is-large
+      [:span.tag.is-danger
        [:span.icon [:i.fa.fa-thermometer-half]]]
-      [:span.tag.is-dark.is-large
+      [:span.tag.is-dark
        (str (:region/temperature region) "C")]]]
     [:div.control
      [:div.tags.has-addons
-      [:span.tag.is-info.is-large
+      [:span.tag.is-info
        [:span.icon [:i.fa.fa-volume-up]]]
-      [:span.tag.is-dark.is-large
+      [:span.tag.is-dark
        (str (:region/noise region) "dB")]]]]])
 
 (defn region-activities [activities]
@@ -57,23 +57,16 @@
       [:span.tag.is-large [:span.icon [:i.fa.fa-user]]]
       [:span.tag.is-dark.is-large (or (:region/people region) 0)]]]]])
 
-(defn grid-tile [region]
+(defn region [region-data]
   (let []
-    ^{:key (:db/id region)}
-    [:div.tile.is-child.box
+    ^{:key (:db/id region-data)}
+    [:div.box.region
      [:div.content
-      [region-header region]
-      [region-activities (:region/activities region)]
-      [region-attrs region]]]))
+      [region-header region-data]
+      [region-activities (:region/activities region-data)]
+      [region-attrs region-data]]]))
 
-(defn grid-row [[lat row]]
-  ^{:key lat}
-  [:div.tile.is-parent.is-vertical
-   (->> row
-        (sort-by (fn [r] (-> r :region/coordinates :coordinate/lat)))
-        (map grid-tile))])
-
-(defn grid-map [env cnx]
+(defn region-map [env cnx]
   (let [region-ids
         @(p/q '[:find [?e ...]
                 :where
@@ -89,12 +82,11 @@
                                                     [?e :person/location ?rid]]
                                                   cnx (:db/id r)))))
              doall)]
-
-    [:div.box [:h1.title "Map"]
+    [:div.region-map
+     [:h1.title "Regions"]
      (->> regions
-          (group-by (fn [r] (-> r :region/coordinates :coordinate/lng)))
-          (map grid-row)
-          (into [:div.tile.is-ancestor]))]))
+          (map region)
+          (into [:div.regions]))]))
 
 (defn page-component [env]
   (let [{:keys [state]} env
@@ -102,4 +94,4 @@
         cnx  @db/cnx-atom]
     [:div.container.page
      [ui/loader cnx
-      [grid-map env cnx]]]))
+      [region-map env cnx]]]))
