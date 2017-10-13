@@ -1,5 +1,6 @@
 (ns ferno.client.db
-  (:require [ferno.transit :as transit]
+  (:require [cljs.pprint :refer [pprint]]
+            [ferno.transit :as transit]
             [ferno.db :as ferno.db]
             [datascript.core :as d]
             [ferno.client.firebase :as fb]
@@ -45,9 +46,11 @@
     (swap! syncing? assoc :add
            (-> fb/database
                (.ref "/datoms")
+               .orderByPriority
                (.on "child_added"
                     (fn [ss]
-                      (let [txs (ferno.db/sync-add-tx @cnx-atom (-> ss .toJSON js->clj))]
+                      (let [txs (-> ss .toJSON js->clj (get ".value")
+                                    ferno.db/sync-add-tx)]
                         (p/transact! @cnx-atom txs)
                         (println "Addition ::" txs))))))))
 
@@ -60,9 +63,11 @@
     (swap! syncing? assoc :change
            (-> fb/database
                (.ref "/datoms")
+               .orderByPriority
                (.on "child_changed"
                     (fn [ss]
-                      (let [txs (ferno.db/sync-add-tx @cnx-atom (-> ss .toJSON js->clj))]
+                      (let [txs (-> ss .toJSON js->clj (get ".value")
+                                    ferno.db/sync-add-tx)]
                         (p/transact! @cnx-atom txs)
                         (println "Change ::" txs))))))))
 
@@ -75,9 +80,11 @@
     (swap! syncing? assoc :retract
            (-> fb/database
                (.ref "/datoms")
+               .orderByPriority
                (.on "child_removed"
                     (fn [ss]
-                      (let [txs (ferno.db/sync-retract-tx @cnx-atom (-> ss .toJSON js->clj))]
+                      (let [txs (-> ss .toJSON js->clj (get ".value")
+                                    ferno.db/sync-retract-tx)]
                         (p/transact! @cnx-atom txs)
                         (println "Retraction ::" txs))))))))
 
@@ -85,4 +92,5 @@
   (get-schema)
   (listen-to-adds!)
   (listen-to-changes!)
-  (listen-to-retracts!))
+  (listen-to-retracts!)
+  )

@@ -65,6 +65,20 @@
 
 ;; initial datoms list
 
+(defn sync-datoms!
+  "Transact multiple datoms into the db."
+  [cnx datom-list]
+  (let [datoms (->> datom-list
+                    (map
+                      (comp
+                        #(ferno.db/clj->vdatom true %)
+                        transit/decode
+                        #(get % ".value")
+                        val))
+                    (into []))]
+    (d/transact cnx datoms)
+    (println "Synced" (count datoms) "datoms")))
+
 (defn process-datoms-list
   "Take :datoms-retrieved event from async channel.
   Extract datoms (retrieved from Firebase).
@@ -73,7 +87,7 @@
   (async/take!
     db-chan
     (fn [{:keys [datoms]}]
-      (ferno.db/sync-datoms! @cnx datoms)
+      (sync-datoms! @cnx datoms)
       (async/put! db-chan {:type :datoms-installed}))))
 
 (defn get-datoms-list []
@@ -119,6 +133,18 @@
     true (ferno.db/transact-datom! fb/database datom)
     false (ferno.db/retract-datom! fb/database datom)))
 
+;; todo
+(defn datom-process-yea [datoms]
+  (->> datoms
+       (map
+         (fn [[eav-hash datom]]
+           {eav-hash (if (.-added datom)
+                       #js {".value"    (-> datom ferno.db/datom->clj transit/encode)
+                            ".priority" (- 9999999 (.-e datom))}
+                       nil)}))
+       (apply merge)
+       clj->js))
+
 (defn process-tx-data!
   "Decode Firebase event and extract raw transaction data.
   Transact raw data, extract returned datoms and flatten them.
@@ -131,10 +157,13 @@
                        flatten-tx-data)]
 
     (println "Processing" (-> ss .-key))
-    ;; process each datom
-    (doseq [datom flattened]
-      (println datom)
-      (process-datom! fb/database datom))
+
+    ;; todo
+
+    (-> fb/database
+        (.ref "/datoms/")
+        (.update (datom-process-yea flattened)))
+
 
     ;; remove the data from Firebase
     (-> ss .-ref .remove)))

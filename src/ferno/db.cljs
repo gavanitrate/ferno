@@ -36,7 +36,7 @@
 
 (defn sync-add-tx
   "Transform an additive datom into transactable data."
-  [cnx datom]
+  [datom]
   (->> datom
        transit/decode
        (ferno.db/clj->vdatom true)
@@ -44,20 +44,11 @@
 
 (defn sync-retract-tx
   "Transform a retractive datom into transactable data."
-  [cnx datom]
+  [datom]
   (->> datom
        transit/decode
        (ferno.db/clj->vdatom false)
        vector))
-
-(defn sync-datoms!
-  "Transact multiple datoms into the db."
-  [cnx datom-list]
-  (let [datoms (->> datom-list vals
-                    (map (comp #(clj->vdatom true %) transit/decode))
-                    (into []))]
-    (d/transact cnx datoms)
-    (println "Synced" (count datoms) "datoms")))
 
 ;; transaction
 
