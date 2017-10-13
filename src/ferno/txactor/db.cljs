@@ -124,17 +124,14 @@
         datom))
     {} tx-data))
 
-(defn process-datom!
-  "Process an individual datom.
-  Add it to the list of datoms in Firebase if it was an additive datom.
-  Or remove it if it was a retraction."
-  [fbdb datom]
-  (case (-> datom second .-added)
-    true (ferno.db/transact-datom! fb/database datom)
-    false (ferno.db/retract-datom! fb/database datom)))
+;; transaction
 
-;; todo
-(defn datom-process-yea [datoms]
+(defn updated-transaction
+  "Transform flattened map of datoms into Firebase .update transaction.
+  For each datom, if it is added, encode datom and assign a priority value.
+  Priority value is dependant on entity ID and determines datom ordering on client-side.
+  If datom was removed, simply set the value as null."
+  [datoms]
   (->> datoms
        (map
          (fn [[eav-hash datom]]
@@ -148,7 +145,7 @@
 (defn process-tx-data!
   "Decode Firebase event and extract raw transaction data.
   Transact raw data, extract returned datoms and flatten them.
-  Process each datom individually, then remove the Firebase reference to the data."
+  Process flattened map of datoms, then remove the Firebase reference to the data."
   [ss]
   (let [txs       (->> ss .val transit/decode)
         flattened (->> txs
@@ -158,11 +155,9 @@
 
     (println "Processing" (-> ss .-key))
 
-    ;; todo
-
     (-> fb/database
         (.ref "/datoms/")
-        (.update (datom-process-yea flattened)))
+        (.update (updated-transaction flattened)))
 
 
     ;; remove the data from Firebase

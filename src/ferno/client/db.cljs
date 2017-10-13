@@ -37,6 +37,26 @@
         (.ref "/tx-queue")
         (.push encoded))))
 
+;; syncing
+
+(defn sync-add-tx
+  "Transform an additive datom into transactable data."
+  [datom]
+  (->> datom
+       transit/decode
+       (ferno.db/clj->vdatom true)
+       vector))
+
+(defn sync-retract-tx
+  "Transform a retractive datom into transactable data."
+  [datom]
+  (->> datom
+       transit/decode
+       (ferno.db/clj->vdatom false)
+       vector))
+
+;; listeners
+
 (defn listen-to-adds!
   "Start listening to child_added events on Firebase ref: /datoms.
   Add the retrieved data into the database."
@@ -49,9 +69,10 @@
                .orderByPriority
                (.on "child_added"
                     (fn [ss]
-                      (let [txs (-> ss .toJSON js->clj (get ".value")
-                                    ferno.db/sync-add-tx)]
-                        (p/transact! @cnx-atom txs)
+                      (let [txs (-> ss .toJSON js->clj
+                                    (get ".value")
+                                    sync-add-tx)]
+                        (p/transact! (cnx) txs)
                         (println "Addition ::" txs))))))))
 
 (defn listen-to-changes!
@@ -66,9 +87,10 @@
                .orderByPriority
                (.on "child_changed"
                     (fn [ss]
-                      (let [txs (-> ss .toJSON js->clj (get ".value")
-                                    ferno.db/sync-add-tx)]
-                        (p/transact! @cnx-atom txs)
+                      (let [txs (-> ss .toJSON js->clj
+                                    (get ".value")
+                                    sync-add-tx)]
+                        (p/transact! (cnx) txs)
                         (println "Change ::" txs))))))))
 
 (defn listen-to-retracts!
@@ -83,9 +105,10 @@
                .orderByPriority
                (.on "child_removed"
                     (fn [ss]
-                      (let [txs (-> ss .toJSON js->clj (get ".value")
-                                    ferno.db/sync-retract-tx)]
-                        (p/transact! @cnx-atom txs)
+                      (let [txs (-> ss .toJSON js->clj
+                                    (get ".value")
+                                    sync-retract-tx)]
+                        (p/transact! (cnx) txs)
                         (println "Retraction ::" txs))))))))
 
 (defn start []
