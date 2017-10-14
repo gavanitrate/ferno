@@ -20,3 +20,4 @@ resources/secrets/
 /resources/public/js
 /resources/public/css
 /public/js/out
+*.iml___jb_tmp___

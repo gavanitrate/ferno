@@ -5,11 +5,13 @@
             [ferno.client.ui.navbar :refer [navbar]]
 
             [ferno.client.pages.dashboard :as dashboard]
+            [ferno.client.pages.region-detail :as rd]
             [ferno.client.pages.query-tester :as query-tester]))
 
 (defn pages [env page]
   (case page
     :dashboard [dashboard/page-component env]
+    :region [rd/page-component env]
     :query-tester [query-tester/page-component env]
     nil [:h1 "Unknown"]))
 

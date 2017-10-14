@@ -2,8 +2,10 @@
   (:require [cljs.reader :as reader]
             [reagent.core :as r]
             [posh.reagent :as p]
-            [ferno.client.db :as db]
-            [ferno.client.ui.components :as ui])
+
+            [ferno.client.ui.components :as ui]
+            [ferno.client.db :refer [cnx] :as db]
+            )
   (:require-macros
     [ferno.macros :refer [seed-edn]]))
 
@@ -67,7 +69,7 @@
            "Transact Remotely"]]
          [:div.control
           [:button.button.is-danger
-           {:on-click #(p/transact! (db/cnx) tx-data)}
+           {:on-click #(p/transact! (cnx) tx-data)}
            "Transact Locally"]]]])
      (catch js/Error e))])
 
@@ -94,7 +96,7 @@
    (when (:query data)
      (try
        (let [q      (-> data :query reader/read-string)
-             result @(p/q q (db/cnx))]
+             result @(p/q q (cnx))]
          [:div.message.is-warning
           [:div.message-header "Query Result"]
           [:div.message-body [ui/inspect result]]])
@@ -133,7 +135,7 @@
      (try
        (let [pid    (int (:pull-id data))
              q      (-> data :pull-query reader/read-string)
-             result @(p/pull (db/cnx) q pid)]
+             result @(p/pull (cnx) q pid)]
          [:div.message.is-warning
           [:div.message-header "Query Result"]
           [:div.message-body [ui/inspect result]]])
@@ -157,10 +159,9 @@
 
 (defn page-component [env]
   (let [{:keys [state]} env
-        data @page-state
-        cnx  @db/cnx-atom]
+        data @page-state]
     [:div.container.page
-     [ui/loader cnx
+     [ui/loader (cnx)
       [:div.tile.is-ancestor
        [:div.tile.is-6.is-vertical.is-parent
         [:div.tile.is-child

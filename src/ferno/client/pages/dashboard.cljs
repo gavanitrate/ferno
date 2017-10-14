@@ -2,50 +2,11 @@
   (:require [cljs.pprint :refer [pprint]]
             [reagent.core :as r]
             [posh.reagent :as p]
+            [datascript.core :as d]
+
             [ferno.client.db :as db]
             [ferno.client.ui.components :as ui]
-            [datascript.core :as d]))
-
-(defonce page-state (r/atom nil))
-
-(defn region-attrs [region]
-  [:div.notification
-   [:label.label "Attributes"]
-   [:div.field.is-grouped.is-multiline
-    [:div.control
-     [:div.tags.has-addons
-      [:span.tag.is-warning
-       [:span.icon [:i.fa.fa-sun-o]]]
-      [:span.tag.is-dark
-       [:span.icon
-        (if (-> region :region/sheltered not)
-          [:i.fa.fa-check] [:i.fa.fa-times])]]]]
-    [:div.control
-     [:div.tags.has-addons
-      [:span.tag.is-danger
-       [:span.icon [:i.fa.fa-thermometer-half]]]
-      [:span.tag.is-dark
-       (str (:region/temperature region) "C")]]]
-    [:div.control
-     [:div.tags.has-addons
-      [:span.tag.is-info
-       [:span.icon [:i.fa.fa-volume-up]]]
-      [:span.tag.is-dark
-       (str (:region/noise region) "dB")]]]]])
-
-(defn region-activities [activities]
-  [:div.notification
-   [:label.label "Activities"]
-   [:div.field.is-grouped.is-multiline
-    (->> activities
-         (map
-           (fn [a]
-             ^{:key (:db/id a)}
-             [:span.tag.is-dark.is-medium
-              (let [activity (-> a :activity/type)]
-                (when activity
-                  (name activity)))]))
-         (into [:div.tags]))]])
+            [ferno.client.state :as state]))
 
 (defn region-header [region]
   [:div.level
@@ -59,12 +20,15 @@
 
 (defn region [region-data]
   (let []
-    ^{:key (:db/id region-data)}
-    [:div.box.region
+    [:a.box.region
+     {:key      (:db/id region-data)
+      :on-click (fn [e]
+                  (.preventDefault e)
+                  (state/move-to-region (:db/id region-data)))}
      [:div.content
       [region-header region-data]
-      [region-activities (:region/activities region-data)]
-      [region-attrs region-data]]]))
+      [ui/region-activities (:region/activities region-data)]
+      [ui/region-attrs region-data]]]))
 
 (defn region-map [env cnx]
   (let [region-ids
@@ -90,8 +54,7 @@
 
 (defn page-component [env]
   (let [{:keys [state]} env
-        data @page-state
-        cnx  @db/cnx-atom]
+        cnx @db/cnx-atom]
     [:div.container.page
      [ui/loader cnx
       [region-map env cnx]]]))
