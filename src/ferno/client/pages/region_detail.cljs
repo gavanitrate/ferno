@@ -44,5 +44,4 @@
   (let [{:keys [state]} env]
     [:div.container.page
      [ui/loader (st/region state)
-      [region (st/region state)]]
-     ]))
+      [region (st/region state)]]]))

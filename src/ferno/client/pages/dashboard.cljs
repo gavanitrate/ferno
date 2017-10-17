@@ -3,6 +3,7 @@
             [reagent.core :as r]
             [posh.reagent :as p]
             [datascript.core :as d]
+            [goog.dom :as dom]
 
             [ferno.client.db :as db]
             [ferno.client.ui.components :as ui]
@@ -52,9 +53,32 @@
           (map region)
           (into [:div.regions]))]))
 
+(defn temp-graph [cnx]
+  (let [avg @(p/q '[:find (avg ?t) .
+                    :where
+                    [?e :region/temperature ?t]]
+                  cnx)]
+    [ui/inspect avg]))
+
+(defn noise-graph [cnx]
+  (let [avg @(p/q '[:find (avg ?n) .
+                    :where
+                    [?e :region/noise ?n]]
+                  cnx)]
+    [ui/inspect avg]))
+
+(defn stats [env cnx]
+  [:div
+   [:h1.title "Statistics"]
+   [:div.columns
+    [:div.column [temp-graph cnx]]
+    [:div.column [noise-graph cnx]]]])
+
 (defn page-component [env]
   (let [{:keys [state]} env
         cnx @db/cnx-atom]
     [:div.container.page
      [ui/loader cnx
-      [region-map env cnx]]]))
+      [:div
+       [stats env cnx]
+       [region-map env cnx]]]]))
