@@ -19,8 +19,8 @@
       [:a.navbar-link [:span.icon [:i.fa.fa-wrench]]]
       [:div.navbar-dropdown.is-right
        [:a.navbar-item
+        {:on-click #(st/change-page :query-tester)}
         [:span
-         {:on-click #(st/change-page :query-tester)}
          [:span.icon [:i.fa.fa-database]]
          "Query Testing"]]
        [:a.navbar-item

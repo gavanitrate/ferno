@@ -18,9 +18,11 @@
 (defonce cnx (atom nil))
 
 (defn connect []
-  (-> fb/database
-      (.ref "/txactor/up")
-      (.set true)))
+  (let [tx-status-ref (-> fb/database (.ref "/txactor/up"))]
+    (.set tx-status-ref true )
+    (-> tx-status-ref
+        .onDisconnect
+        .remove)))
 
 ;; schema
 

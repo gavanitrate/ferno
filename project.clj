@@ -7,6 +7,8 @@
                  [org.clojure/clojurescript "1.9.908"]
                  [org.clojure/data.json "0.2.6"]
 
+                 [cljsjs/moment "2.17.1-1"]
+
                  [reagent "0.8.0-alpha1"]
                  [com.cognitect/transit-cljs "0.8.239"]
                  [datascript "0.16.2"]

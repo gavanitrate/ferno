@@ -3,10 +3,10 @@
             [reagent.core :as r]
             [posh.reagent :as p]
             [datascript.core :as d]
-            [goog.dom :as dom]
 
             [ferno.client.db :as db]
             [ferno.client.ui.components :as ui]
+            [ferno.client.ui.charts :refer [updating-timeline]]
             [ferno.client.state :as state]))
 
 (defn region-header [region]
@@ -54,18 +54,60 @@
           (into [:div.regions]))]))
 
 (defn temp-graph [cnx]
-  (let [avg @(p/q '[:find (avg ?t) .
-                    :where
-                    [?e :region/temperature ?t]]
-                  cnx)]
-    [ui/inspect avg]))
+  [:div
+   [updating-timeline "dashboard-temp-chart"
+    {:data         {:datasets [{:fill            true
+                                :pointRadius     0
+                                :borderColor     "#FF3860"
+                                :backgroundColor "rgba(255, 56, 96, 0.1)"}]}
+     :options      {:title      {:display true
+                                 :text    "Average Temperature Graph"}
+                    :scales     {:yAxes [{:scaleLabel {:display     true
+                                                       :labelString "Temperature (C)"}
+                                          :ticks      {:suggestedMin 20
+                                                       :suggestedMax 31}}]
+                                 :xAxes [{:scaleLabel {:display     true
+                                                       :labelString "Time"}}]}
+                    :tooltips   {:enabled false}
+                    :legend     {:display false}
+                    :responsive true}
+     :interval     100
+     :max-interval 101
+     :update-fn    (fn [ch]
+                     (let [chi (-> ch :chart-instance)]
+                       (-> chi .-data .-datasets first .-data
+                           (.push @(p/q '[:find (avg ?t) .
+                                          :where
+                                          [?e :region/temperature ?t]]
+                                        cnx)))))}]])
 
 (defn noise-graph [cnx]
-  (let [avg @(p/q '[:find (avg ?n) .
-                    :where
-                    [?e :region/noise ?n]]
-                  cnx)]
-    [ui/inspect avg]))
+  [:div
+   [updating-timeline "dashboard-noise-chart"
+    {:data         {:datasets [{:fill            true
+                                :pointRadius     0
+                                :borderColor     "#3273DC"
+                                :backgroundColor "rgba(50, 115, 220, 0.1)"}]}
+     :options      {:title      {:display true
+                                 :text    "Average Noise Graph"}
+                    :scales     {:yAxes [{:scaleLabel {:display     true
+                                                       :labelString "Noise (dBA)"}
+                                          :ticks      {:suggestedMin 20
+                                                       :suggestedMax 31}}]
+                                 :xAxes [{:scaleLabel {:display     true
+                                                       :labelString "Time"}}]}
+                    :tooltips   {:enabled false}
+                    :legend     {:display false}
+                    :responsive true}
+     :interval     100
+     :max-interval 101
+     :update-fn    (fn [ch]
+                     (let [chi (-> ch :chart-instance)]
+                       (-> chi .-data .-datasets first .-data
+                           (.push @(p/q '[:find (avg ?n) .
+                                          :where
+                                          [?e :region/noise ?n]]
+                                        cnx)))))}]])
 
 (defn stats [env cnx]
   [:div
