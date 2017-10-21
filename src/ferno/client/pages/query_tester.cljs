@@ -172,7 +172,7 @@
                   (db/transact
                     [{:db/id              region-id
                       :region/temperature updated-temp}])))
-             800))))
+             4500))))
 
 (defn generate-region-noise []
   (let [regions @(p/q
@@ -191,7 +191,7 @@
                   (db/transact
                     [{:db/id        region-id
                       :region/noise updated-noise}])))
-             800))))
+             750))))
 
 
 

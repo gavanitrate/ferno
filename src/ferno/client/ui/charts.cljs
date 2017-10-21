@@ -72,6 +72,6 @@
                (if (>= (count chart-data) max-interval)
                  (.shift chart-data)
                  (.unshift chart-labels (nth intervals (count chart-data))))
-               (.update chart-instance #js {:duration 0})))
+               (.update chart-instance #js {:duration 100})))
            :update-data-interval
            interval}])})))

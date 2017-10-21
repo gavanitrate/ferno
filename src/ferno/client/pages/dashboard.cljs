@@ -64,15 +64,15 @@
                                  :text    "Average Temperature Graph"}
                     :scales     {:yAxes [{:scaleLabel {:display     true
                                                        :labelString "Temperature (C)"}
-                                          :ticks      {:suggestedMin 20
-                                                       :suggestedMax 31}}]
+                                          :ticks      {:suggestedMin 17
+                                                       :suggestedMax 38}}]
                                  :xAxes [{:scaleLabel {:display     true
                                                        :labelString "Time"}}]}
                     :tooltips   {:enabled false}
                     :legend     {:display false}
                     :responsive true}
-     :interval     200
-     :max-interval 101
+     :interval     500
+     :max-interval 41
      :update-fn    (fn [chart]
                      (let [chart-instance (:chart-instance chart)]
                        (-> (aget chart-instance "data" "datasets" 0 "data")
@@ -92,8 +92,8 @@
                                  :text    "Average Noise Graph"}
                     :scales     {:yAxes [{:scaleLabel {:display     true
                                                        :labelString "Noise (dBA)"}
-                                          :ticks      {:suggestedMin 20
-                                                       :suggestedMax 31}}]
+                                          :ticks      {:suggestedMin 24
+                                                       :suggestedMax 60}}]
                                  :xAxes [{:scaleLabel {:display     true
                                                        :labelString "Time"}}]}
                     :tooltips   {:enabled false}
