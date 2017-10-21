@@ -71,11 +71,11 @@
                     :tooltips   {:enabled false}
                     :legend     {:display false}
                     :responsive true}
-     :interval     100
+     :interval     200
      :max-interval 101
-     :update-fn    (fn [ch]
-                     (let [chi (-> ch :chart-instance)]
-                       (-> chi .-data .-datasets first .-data
+     :update-fn    (fn [chart]
+                     (let [chart-instance (:chart-instance chart)]
+                       (-> (aget chart-instance "data" "datasets" 0 "data")
                            (.push @(p/q '[:find (avg ?t) .
                                           :where
                                           [?e :region/temperature ?t]]
@@ -99,11 +99,11 @@
                     :tooltips   {:enabled false}
                     :legend     {:display false}
                     :responsive true}
-     :interval     100
+     :interval     200
      :max-interval 101
-     :update-fn    (fn [ch]
-                     (let [chi (-> ch :chart-instance)]
-                       (-> chi .-data .-datasets first .-data
+     :update-fn    (fn [chart]
+                     (let [chart-instance (:chart-instance chart)]
+                       (-> (aget chart-instance "data" "datasets" 0 "data")
                            (.push @(p/q '[:find (avg ?n) .
                                           :where
                                           [?e :region/noise ?n]]

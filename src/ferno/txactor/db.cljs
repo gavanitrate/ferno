@@ -19,7 +19,7 @@
 
 (defn connect []
   (let [tx-status-ref (-> fb/database (.ref "/txactor/up"))]
-    (.set tx-status-ref true )
+    (.set tx-status-ref true)
     (-> tx-status-ref
         .onDisconnect
         .remove)))
@@ -149,17 +149,19 @@
   Transact raw data, extract returned datoms and flatten them.
   Process flattened map of datoms, then remove the Firebase reference to the data."
   [ss]
-  (let [txs       (->> ss .val transit/decode)
-        flattened (->> txs
-                       (d/transact! @cnx)
-                       :tx-data
-                       flatten-tx-data)]
+  (let [txs        (->> ss .val transit/decode)
+        flattened  (->> txs
+                        (d/transact! @cnx)
+                        :tx-data
+                        flatten-tx-data)
+        updated-tx (updated-transaction flattened)]
 
     (println "Processing" (-> ss .-key))
 
-    (-> fb/database
-        (.ref "/datoms/")
-        (.update (updated-transaction flattened)))
+    (when updated-tx
+      (-> fb/database
+          (.ref "/datoms/")
+          (.update (updated-transaction flattened))))
 
 
     ;; remove the data from Firebase

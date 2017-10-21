@@ -145,7 +145,61 @@
           [:div.message-header "Query Error"]
           [:div.message-body [ui/inspect e]]])))])
 
-(defn generators []
+(defonce generators-atom (r/atom nil))
+
+(defn clamp [x min max]
+  (cond
+    (<= min x max) x
+
+    (< x min) min
+
+    (> x max) max))
+
+(defn generate-region-temp []
+  (let [regions @(p/q
+                   '[:find ?e ?t
+                     :where
+                     [?e :region/temperature ?t]]
+                   (cnx))]
+    (swap! generators-atom assoc :region/temperature
+           (js/setInterval
+             #(doseq [r regions]
+                (let [region-id    (first r)
+                      region-temp  (second r)
+                      updated-temp (-> region-temp
+                                       (+ (- (rand-int 6) 3))
+                                       (clamp 17 38))]
+                  (db/transact
+                    [{:db/id              region-id
+                      :region/temperature updated-temp}])))
+             800))))
+
+(defn generate-region-noise []
+  (let [regions @(p/q
+                   '[:find ?e ?n
+                     :where
+                     [?e :region/noise ?n]]
+                   (cnx))]
+    (swap! generators-atom assoc :region/noise
+           (js/setInterval
+             #(doseq [r regions]
+                (let [region-id     (first r)
+                      region-noise  (second r)
+                      updated-noise (-> region-noise
+                                        (+ (- (rand-int 10) 5))
+                                        (clamp 24 125))]
+                  (db/transact
+                    [{:db/id        region-id
+                      :region/noise updated-noise}])))
+             800))))
+
+
+
+(defn stop-generator [gen-data gen-key]
+  (js/clearInterval (get gen-data gen-key))
+  (swap! generators-atom dissoc gen-key))
+
+(defn generators [data gen-data]
   [:div.box
    [:p.subtitle "Generators"]
    [:div.field.is-horizontal
@@ -153,13 +207,26 @@
      [:div.field.is-grouped
       [:div.control
        [:div.level-right
-        [:button.button.is-small
-         {:on-click #(println "person/location change")}
-         ":person/location"]]]]]]])
+        (let [temp-gen (:region/temperature gen-data)]
+          [:button.button.is-small
+           {:class    (when temp-gen "is-active is-danger")
+            :on-click #(if temp-gen
+                         (stop-generator gen-data :region/temperature)
+                         (generate-region-temp))}
+           ":region/temp"])
+        (let [noise-gen (:region/noise gen-data)]
+          [:button.button.is-small
+           {:class    (when noise-gen "is-active is-danger")
+            :on-click #(if noise-gen
+                         (stop-generator gen-data :region/noise)
+                         (generate-region-noise))}
+           ":region/noise"])
+        ]]]]]])
 
 (defn page-component [env]
   (let [{:keys [state]} env
-        data @page-state]
+        data            @page-state
+        generators-data @generators-atom]
     [:div.container.page
      [ui/loader (cnx)
       [:div.tile.is-ancestor
@@ -169,7 +236,7 @@
         [:div.tile.is-child
          [query-tester data]]
         [:div.tile.is-child
-         [generators data]]]
+         [generators data generators-data]]]
        [:div.tile.is-parent
         [:div.tile.is-child
          [pull-tester data]]]]]]))

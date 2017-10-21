@@ -4,7 +4,7 @@
             [cljsjs.moment]
             [vendor.Chart]))
 
-(defn chart
+(defn chart-component
   [id data {:keys [update-data-fn update-data-interval]}]
   (when (nil? data)
     (throw (js/Error "No Chart.js data provided.")))
@@ -58,19 +58,20 @@
     (r/create-class
       {:reagent-render
        (fn [id]
-         [chart id
+         [chart-component id
           {:type    "line"
            :data    data
            :options options}
           {:update-data-fn
            (fn [chart-atom]
-             (let [ch     @chart-atom
-                   chi    (-> @chart-atom :chart-instance)
-                   dcount (-> chi .-data .-datasets first .-data count)]
-               (if (>= dcount max-interval)
-                 (-> chi .-data .-datasets first .-data .shift)
-                 (-> chi .-data .-labels (.unshift (nth intervals dcount))))
-               (update-fn ch)
-               (.update chi (clj->js {:duration 0}))))
+             (let [chart          @chart-atom
+                   chart-instance (:chart-instance chart)
+                   chart-data     (aget chart-instance "data" "datasets" 0 "data")
+                   chart-labels   (aget chart-instance "data" "labels")]
+               (update-fn chart)
+               (if (>= (count chart-data) max-interval)
+                 (.shift chart-data)
+                 (.unshift chart-labels (nth intervals (count chart-data))))
+               (.update chart-instance #js {:duration 0})))
            :update-data-interval
            interval}])})))
