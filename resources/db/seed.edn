@@ -46,18 +46,27 @@
  ;; people
  ;; ---------------------------------------------------------------------
 
- {:person/name     "Gavan Singh"
-  :person/age      22
-  :person/gender   :male
-  :person/location -1300
-  :person/activity {:activity/type :listen-music}}
+ {:person/name        "Gavan Singh"
+  :person/age         22
+  :person/gender      :male
+  :person/location    -1300
+  :person/activity    {:activity/type :listen-music}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  45}
+                       {:preference/type :region/temperature
+                        :preference/max  28}]
+  }
 
  ;; market
  {:person/name     "Henry Eamonds"
   :person/age      32
   :person/gender   :male
   :person/location -1100
-  :person/activity {:activity/type :shop}}
+  :person/activity {:activity/type :shop}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  47}
+                       {:preference/type :region/temperature
+                        :preference/max  25}]}
  {:person/name     "Christopher Harman"
   :person/age      31
   :person/gender   :male
@@ -67,69 +76,121 @@
   :person/age      26
   :person/gender   :female
   :person/location -1100
-  :person/activity {:activity/type :work}}
+  :person/activity {:activity/type :work}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  50}
+                       {:preference/type :region/temperature
+                        :preference/max  31}]}
 
  ;; pub
  {:person/name     "Imogen Kardif"
   :person/age      23
   :person/gender   :female
   :person/location -1200
-  :person/activity {:activity/type :drink}}
+  :person/activity {:activity/type :drink}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  80}
+                       {:preference/type :region/temperature
+                        :preference/max  31}]}
  {:person/name     "Emily Dornal"
   :person/age      25
   :person/gender   :female
   :person/location -1200
-  :person/activity {:activity/type :dance}}
+  :person/activity {:activity/type :dance}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  85}
+                       {:preference/type :region/temperature
+                        :preference/max  28}]}
  {:person/name     "Kate Winchester"
   :person/age      33
   :person/gender   :female
   :person/location -1200
-  :person/activity {:activity/type :work}}
+  :person/activity {:activity/type :work}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  95}
+                       {:preference/type :region/temperature
+                        :preference/max  29}]}
  {:person/name     "Quin Van Khrit"
   :person/age      21
   :person/gender   :female
   :person/location -1200
-  :person/activity {:activity/type :drink}}
+  :person/activity {:activity/type :drink}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  75}
+                       {:preference/type :region/temperature
+                        :preference/max  24}]}
  {:person/name     "Duncan Runt"
   :person/age      23
   :person/gender   :male
   :person/location -1200
-  :person/activity {:activity/type :dance}}
+  :person/activity {:activity/type :dance}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  85}
+                       {:preference/type :region/temperature
+                        :preference/max  29}]}
  {:person/name     "Ulysis Taindsman"
   :person/age      25
   :person/gender   :male
   :person/location -1200
-  :person/activity {:activity/type :billiards}}
+  :person/activity {:activity/type :billiards}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  95}
+                       {:preference/type :region/temperature
+                        :preference/max  31}]}
  {:person/name     "Jennifer Landrey"
   :person/age      21
   :person/gender   :female
   :person/location -1200
-  :person/activity {:activity/type :work}}
+  :person/activity {:activity/type :work}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  85}
+                       {:preference/type :region/temperature
+                        :preference/max  35}]}
  {:person/name     "Lincoln Reverence"
   :person/age      27
   :person/gender   :male
   :person/location -1200
-  :person/activity {:activity/type :dance}}
+  :person/activity {:activity/type :dance}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  60}
+                       {:preference/type :region/temperature
+                        :preference/max  22}]}
 
  ;; restaurant
  {:person/name     "John Lowings"
   :person/age      45
   :person/gender   :male
   :person/location -1400
-  :person/activity {:activity/type :eat}}
+  :person/activity {:activity/type :eat}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  35}
+                       {:preference/type :region/temperature
+                        :preference/max  26}]}
  {:person/name     "Barbara Lowings"
   :person/age      46
   :person/gender   :female
   :person/location -1400
-  :person/activity {:activity/type :eat}}
+  :person/activity {:activity/type :eat}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  35}
+                       {:preference/type :region/temperature
+                        :preference/max  24}]}
  {:person/name     "James Kisp"
   :person/age      22
   :person/gender   :male
   :person/location -1400
-  :person/activity {:activity/type :eat}}
+  :person/activity {:activity/type :eat}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  68}
+                       {:preference/type :region/temperature
+                        :preference/max  30}]}
  {:person/name     "Jenna Finders"
   :person/age      22
   :person/gender   :female
   :person/location -1400
-  :person/activity {:activity/type :drink}}
+  :person/activity {:activity/type :drink}
+  :person/preferences [{:preference/type :region/noise
+                        :preference/max  50}
+                       {:preference/type :region/temperature
+                        :preference/max  25}]}
  ]
