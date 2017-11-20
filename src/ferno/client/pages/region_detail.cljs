@@ -9,6 +9,18 @@
 
 (defonce filter-atom (r/atom nil))
 
+(defn person-prefs [preferences]
+  (->> preferences
+       (map
+         (fn [{:keys [db/id preference/max preference/type]}]
+           ^{:key id}
+           [:div.column.inline-detail
+            [:div.columns
+             [:div.column.is-4
+              [:label (-> type cljs.core/name str/capitalize)]]
+             [:div.column "" max]]]))
+       (into [:div.columns])))
+
 (defn person [filter [person-id]]
   (let [{:keys [person/name
                 person/age person/gender
@@ -16,27 +28,27 @@
         @(p/pull (cnx) '[*] person-id)]
     [:a.box
      [:div.content
-      [:h5 name]
+      [:h4 name]
       [:div.columns
-       [:div.column "Current Activity"]
-       [:div.column (:activity/type activity)]]
-      [:div.columns
-       [:div.column
+       [:div.column.inline-detail
         [:div.columns
-         [:div.column "Age"]
+         [:div.column [:label "Current Activity"]]
+         [:div.column (:activity/type activity)]]]
+
+       [:div.column.inline-detail
+        [:div.columns
+         [:div.column.is-4 [:label "Age"]]
          [:div.column age]]]
-       [:div.column
+
+       [:div.column.inline-detail
         [:div.columns
-         [:div.column "Gender"]
+         [:div.column.is-4 [:label "Gender"]]
          [:div.column gender]]]]
-      (->> preferences
-           (map
-             (fn [{:keys [db/id preference/max preference/type]}]
-               ^{:key id}
-               [:span
-                [:span (-> type cljs.core/name str/capitalize)]
-                [:span "Max: " max]]))
-           (into [:div.user-preferences]))]]))
+
+      [:div
+       [:h6 "Maximum Preferences"]
+       (person-prefs preferences)]
+      ]]))
 
 (defn people-list [people]
   (->> people
