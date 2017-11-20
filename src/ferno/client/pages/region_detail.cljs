@@ -1,5 +1,6 @@
 (ns ferno.client.pages.region-detail
-  (:require [reagent.core :as r]
+  (:require [clojure.string :as str]
+            [reagent.core :as r]
             [posh.reagent :as p]
 
             [ferno.client.ui.components :as ui]
@@ -9,12 +10,33 @@
 (defonce filter-atom (r/atom nil))
 
 (defn person [filter [person-id]]
-  (let [{:keys [person/name person/activity] :as pd}
+  (let [{:keys [person/name
+                person/age person/gender
+                person/preferences person/activity] :as pd}
         @(p/pull (cnx) '[*] person-id)]
     [:a.box
      [:div.content
-      [:h3 name]
-      [:span "Current Activity: " (:activity/type activity)]]]))
+      [:h5 name]
+      [:div.columns
+       [:div.column "Current Activity"]
+       [:div.column (:activity/type activity)]]
+      [:div.columns
+       [:div.column
+        [:div.columns
+         [:div.column "Age"]
+         [:div.column age]]]
+       [:div.column
+        [:div.columns
+         [:div.column "Gender"]
+         [:div.column gender]]]]
+      (->> preferences
+           (map
+             (fn [{:keys [db/id preference/max preference/type]}]
+               ^{:key id}
+               [:span
+                [:span (-> type cljs.core/name str/capitalize)]
+                [:span "Max: " max]]))
+           (into [:div.user-preferences]))]]))
 
 (defn people-list [people]
   (->> people
@@ -22,56 +44,67 @@
        (map #(person filter %))
        (into [:div.people-list])))
 
-(defn filterable-activities [activities filter]
-  [:div.notification
-   [:label.label "Activities"]
-   [:div.field.is-grouped.is-multiline
-    (->> activities
-         (map
-           (fn [a]
-             ^{:key (:db/id a)}
-             (let [activity (-> a :activity/type)
-                   factive  (= activity (:activity/type filter))]
-               [:a.tag.is-dark.is-medium
-                {:class    (when factive "is-primary")
-                 :on-click #(if factive
-                              (reset! filter-atom nil)
-                              (reset! filter-atom {:activity/type activity}))}
-                (when activity (name activity))])))
-         (into [:div.tags]))]])
+(defn region-coordinates [coordinates]
+  [:div
+   [:h5 "Coordinates"]
+   [:div.inline-detail
+    [:div.columns
+     [:div.column [:label "Latitude"]]
+     [:div.column [:span (:coordinate/lat coordinates)]]]]
 
-(defn filterable-attrs [region filter]
-  [:div.notification
-   [:label.label "Attributes"]
-   (let [ftemp  (:region/temperature filter)
-         fnoise (:region/noise filter)]
-     [:div.field.is-grouped.is-multiline
-      [:div.control
-       [:div.tags.has-addons
-        [:span.tag.is-warning
-         [:span.icon [:i.fa.fa-sun-o]]]
-        [:span.tag.is-dark
-         [ui/yorn (-> region :region/sheltered not)]]]]
-      [:div.control
-       [:div.tags.has-addons
-        [:span.tag.is-danger
-         [:span.icon [:i.fa.fa-thermometer-half]]]
-        [:a.tag
-         {:class    (if ftemp "is-success" "is-dark")
-          :on-click #(if ftemp
-                       (reset! filter-atom nil)
-                       (reset! filter-atom {:region/temperature :temp}))}
-         (str (:region/temperature region) "C")]]]
-      [:div.control
-       [:div.tags.has-addons
-        [:span.tag.is-info
-         [:span.icon [:i.fa.fa-volume-up]]]
-        [:a.tag.is-dark
-         {:class    (if fnoise "is-success" "is-dark")
-          :on-click #(if fnoise
-                       (reset! filter-atom nil)
-                       (reset! filter-atom {:region/noise :noise}))}
-         (str (:region/noise region) "dB")]]]])])
+   [:div.inline-detail
+    [:div.columns
+     [:div.column [:label "Longitude"]]
+     [:div.column [:span (:coordinate/lng coordinates)]]]]])
+
+(defn region-attrs [region filter]
+  (let [ftemp  (:region/temperature filter)
+        fnoise (:region/noise filter)]
+    [:div
+     [:h5 "Attributes"]
+
+     [:div.inline-detail
+      [:div.columns
+       [:div.column [:label "Sheltered"]]
+       [:div.column [:span [ui/yorn (-> region :region/sheltered not)]]]]]
+
+     [:div.selectable.inline-detail
+      {:class (when ftemp "selected")}
+      [:a
+       {:on-click #(if ftemp
+                     (reset! filter-atom nil)
+                     (reset! filter-atom {:region/temperature :temp}))}
+       [:div.columns
+        [:div.column [:label "Temperature"]]
+        [:div.column [:span (str (:region/temperature region) "C")]]]]]
+
+
+     [:div.selectable.inline-detail
+      {:class (when fnoise "selected")}
+      [:a
+       {:on-click #(if fnoise
+                     (reset! filter-atom nil)
+                     (reset! filter-atom {:region/noise :noise}))}
+       [:div.columns
+        [:div.column [:label "Noise"]]
+        [:div.column [:span (str (:region/noise region) "dB")]]]]]]))
+
+(defn region-activities [activities filter]
+  [:div
+   [:h5 "Activities"]
+   (->> activities
+        (map
+          (fn [a]
+            ^{:key (:db/id a)}
+            (let [activity (-> a :activity/type)
+                  factive  (= activity (:activity/type filter))]
+              [:a.tag.is-dark.is-medium
+               {:class    (when factive "is-primary")
+                :on-click #(if factive
+                             (reset! filter-atom nil)
+                             (reset! filter-atom {:activity/type activity}))}
+               (when activity (name activity))])))
+        (into [:div.tags]))])
 
 (defn to-q [q-map]
   (into []
@@ -132,20 +165,27 @@
     [:div.box
      [:div.content
       [:h1 (:region/name r)]
+
+      [:h2 "Region Details"]
+
       [:div.columns
        [:div.column
-        [:h2 "Region Details"]
-        [ui/region-coordinates (:region/coordinates r)]
-        [filterable-attrs r filter]
-        [filterable-activities (:region/activities r) filter]]
+        [region-coordinates (:region/coordinates r)]]
        [:div.column
-        [:h2
-         (if filter
-           (str "People With Current Activity: "
-                (-> filter first second
-                    name clojure.string/capitalize))
-           "People Currently Here")]
-        [people-list p]]]]]))
+        [region-attrs r filter]]
+       [:div.column
+        [region-activities (:region/activities r) filter]]]
+
+      [:div
+       [:h2
+        (let [filter-type (-> filter ffirst)
+              filter-val  (-> filter first second)]
+          (case filter-type
+            :region/temperature "People who's temperature preference is being violated"
+            :region/noise "People who's noise preference is being violated"
+            :activity/type (str "People currently performing: " (name filter-val))
+            "People Currently Here"))]
+       [people-list p]]]]))
 
 (defn page-component [env]
   (let [{:keys [state]} env]

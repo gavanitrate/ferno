@@ -6,9 +6,20 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+  }
+}
 
-    .region {
+.inline-detail {
+  padding-left: 1em;
+
+  &.selectable {
+    label {
+      cursor: pointer;
+      font-weight: 700;
     }
+  }
 
+  &.selected {
+    background: $white-ter;
   }
 }

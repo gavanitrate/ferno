@@ -21,15 +21,14 @@
 
 (defn region [region-data]
   (let []
-    [:a.box.region
-     {:key      (:db/id region-data)
-      :on-click (fn [e]
-                  (.preventDefault e)
-                  (state/move-to-region (:db/id region-data)))}
-     [:div.content
-      [region-header region-data]
-      [ui/region-activities (:region/activities region-data)]
-      [ui/region-attrs region-data]]]))
+    [:div.column
+     [:a.box
+      {:key      (:db/id region-data)
+       :on-click (fn [e]
+                   (.preventDefault e)
+                   (state/move-to-region (:db/id region-data)))}
+      [:div.content
+       [region-header region-data]]]]))
 
 (defn region-map [env cnx]
   (let [region-ids
@@ -51,7 +50,7 @@
      [:h1.title "Regions"]
      (->> regions
           (map region)
-          (into [:div.regions]))]))
+          (into [:div.columns]))]))
 
 (defn temp-graph [cnx]
   [:div
