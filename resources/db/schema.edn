@@ -5,16 +5,10 @@
 
  ;; activity
  :activity/type      {:db/cardinality :db.cardinality/one}
- :travel/to          {:db/cardinality :db.cardinality/one
-                      :db/valueType   :db.type/ref}
- :travel/todo        {:db/cardinality :db.cardinality/one
-                      :db/isComponent true
-                      :db/valueType   :db.type/ref}
 
  ;; preference
  :preference/type    {:db/cardinality :db.cardinality/one}
  :preference/max     {:db/cardinality :db.cardinality/one}
- :preference/min     {:db/cardinality :db.cardinality/one}
 
  ;; person
  :person/name        {:db/cardinality :db.cardinality/one}
