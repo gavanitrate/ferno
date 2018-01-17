@@ -17,7 +17,11 @@
 
 (defonce cnx (atom nil))
 
-(defn connect []
+(defn connect
+  "Check if a transactor is already deployed.
+  If it is, exit cleanly.
+  Otherwise, start boot up routine."
+  []
   (let [tx-status-ref (-> fb/database (.ref "/txactor/up"))]
     (.once tx-status-ref "value"
            (fn [ss]
