@@ -1,9 +1,4 @@
-(ns ferno.db
-  (:require [cljs.pprint :refer [pprint]]
-            [ferno.transit :as transit]
-            [datascript.core :as d]))
-
-;; datom helpers
+(ns ferno.datom)
 
 (defn eav-hash
   "Create a hash of a datom's entity ID, attribute and value."

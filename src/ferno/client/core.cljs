@@ -15,17 +15,12 @@
     :query-tester [query-tester/page-component env]
     nil [:h1 "Unknown"]))
 
-(defn footer []
-  [:footer])
-
 (defn main []
   (let [state @st/state-atom
         env   {:state state}]
     [:div
      [navbar env]
-     [pages env (st/page state)]
-     [footer]
-     ]))
+     [pages env (st/page state)]]))
 
 (defn mount-root []
   (r/render [main] (.getElementById js/document "app")))

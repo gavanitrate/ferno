@@ -4,7 +4,7 @@
             [datascript.core :as d]
             [ferno.txactor.firebase :as fb]
             [ferno.transit :as transit]
-            [ferno.db :as ferno.db])
+            [ferno.datom :as ferno.db])
   (:require-macros
     [ferno.macros :refer [schema-edn]]))
 
@@ -19,10 +19,17 @@
 
 (defn connect []
   (let [tx-status-ref (-> fb/database (.ref "/txactor/up"))]
-    (.set tx-status-ref true)
-    (-> tx-status-ref
-        .onDisconnect
-        .remove)))
+    (.once tx-status-ref "value"
+           (fn [ss]
+             (if (->> ss .toJSON js->clj true?)
+               (do
+                 (println "A transactor is already running. Now exiting.")
+                 (.exit cljs.nodejs/process))
+               (do
+                 (.set tx-status-ref true)
+                 (-> tx-status-ref
+                     .onDisconnect
+                     .remove)))))))
 
 ;; schema
 
@@ -73,7 +80,7 @@
   (let [datoms (->> datom-list
                     (map
                       (comp
-                        #(ferno.db/clj->vdatom true %)
+                        #(ferno.datom/clj->vdatom true %)
                         transit/decode
                         #(get % ".value")
                         val))
@@ -122,7 +129,7 @@
   (reduce
     (fn [snapshot-map datom]
       (assoc snapshot-map
-        (ferno.db/eav-hash datom)
+        (ferno.datom/eav-hash datom)
         datom))
     {} tx-data))
 
@@ -138,7 +145,7 @@
        (map
          (fn [[eav-hash datom]]
            {eav-hash (if (.-added datom)
-                       #js {".value"    (-> datom ferno.db/datom->clj transit/encode)
+                       #js {".value"    (-> datom ferno.datom/datom->clj transit/encode)
                             ".priority" (- 9999999 (.-e datom))}
                        nil)}))
        (apply merge)
@@ -162,7 +169,6 @@
       (-> fb/database
           (.ref "/datoms/")
           (.update (updated-transaction flattened))))
-
 
     ;; remove the data from Firebase
     (-> ss .-ref .remove)))

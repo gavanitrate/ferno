@@ -1,7 +1,7 @@
 (ns ferno.client.db
   (:require [cljs.pprint :refer [pprint]]
             [ferno.transit :as transit]
-            [ferno.db :as ferno.db]
+            [ferno.datom :as ferno.db]
             [datascript.core :as d]
             [ferno.client.firebase :as fb]
             [posh.reagent :as p]
@@ -10,8 +10,7 @@
 
 (defonce cnx-atom (r/atom nil))
 
-(defn cnx []
-  @cnx-atom)
+(defn cnx [] @cnx-atom)
 
 ;; state of syncing
 
@@ -44,7 +43,7 @@
   [datom]
   (->> datom
        transit/decode
-       (ferno.db/clj->vdatom true)
+       (ferno.datom/clj->vdatom true)
        vector))
 
 (defn sync-retract-tx
@@ -52,7 +51,7 @@
   [datom]
   (->> datom
        transit/decode
-       (ferno.db/clj->vdatom false)
+       (ferno.datom/clj->vdatom false)
        vector))
 
 ;; listeners
@@ -114,6 +113,6 @@
 (defn start []
   (get-schema)
   (listen-to-adds!)
-  (listen-to-changes!)
+  ;(listen-to-changes!) ;; this never occurs
   (listen-to-retracts!)
   )

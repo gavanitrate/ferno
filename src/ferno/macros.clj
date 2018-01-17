@@ -1,7 +1,7 @@
 (ns ferno.macros)
 
 (def firebase-service-account-file
-  (->> "resources/secrets/engg4805-firebase-adminsdk-kaflx-cb111c9ff5.json"
+  (->> "resources/secrets/engg4805-firebase-adminsdk-kaflx-a02e6e935e.json"
        slurp
        clojure.data.json/read-json))
 
@@ -22,7 +22,6 @@
 
 (defmacro schema-edn
   "Ferno Schema"
-
   []
   `~schema-file)
 
