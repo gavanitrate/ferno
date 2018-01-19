@@ -3,6 +3,7 @@
             [reagent.core :as r]
             [posh.reagent :as p]
 
+            [ferno.query :as query]
             [ferno.client.ui.components :as ui]
             [ferno.client.db :refer [cnx] :as db]
             [ferno.client.state :as st]))
@@ -118,18 +119,6 @@
                (when activity (name activity))])))
         (into [:div.tags]))])
 
-(defn to-q [q-map]
-  (into []
-        (apply concat
-               [(into [:find] (:find q-map))
-                (into [:in] (:in q-map))
-                (into [:where] (:where q-map))])))
-
-(defn q-add [o a]
-  (->> o
-       (map (fn [[k v]] {k (concat v (get a k))}))
-       (into {})))
-
 (defn people-data [region-id filter]
   (let [people
           {:find  '[?p]
@@ -167,7 +156,7 @@
             (:region/noise filter) noisef-q
             :else nil)
 
-        q (to-q (q-add people add-q))]
+        q (query/to-q (query/q-add people add-q))]
     @(p/q q (cnx) region-id (-> filter first second))))
 
 (defn region [region-id]

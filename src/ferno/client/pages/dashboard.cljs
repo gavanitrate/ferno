@@ -9,47 +9,47 @@
             [ferno.client.ui.charts :refer [updating-timeline]]
             [ferno.client.state :as state]))
 
-(defn region-header [region]
+(defn region-header [region-name region-people]
   [:div.level
    [:div.level-left
-    [:div.level-item [:p.subtitle (:region/name region)]]]
+    [:div.level-item [:p.subtitle region-name]]]
    [:div.level-right
     [:div.level-item
      [:div.tags.has-addons
       [:span.tag.is-large [:span.icon [:i.fa.fa-user]]]
-      [:span.tag.is-dark.is-large (or (:region/people region) 0)]]]]])
+      [:span.tag.is-dark.is-large (or region-people 0)]]]]])
 
-(defn region [region-data]
-  (let []
+(defn region [cnx region-id]
+  (let [region-pull
+        @(p/pull cnx '[*] region-id)
+
+        region-people
+        @(p/q '[:find (count ?e) .
+                :in $ ?rid
+                :where
+                [?e :person/location ?rid]]
+              cnx region-id)]
     [:div.column
      [:a.box
-      {:key      (:db/id region-data)
+      {:key      region-id
        :on-click (fn [e]
                    (.preventDefault e)
-                   (state/move-to-region (:db/id region-data)))}
+                   (state/move-to-region region-id))}
       [:div.content
-       [region-header region-data]]]]))
+       [region-header
+        (:region/name region-pull)
+        region-people]]]]))
 
 (defn region-map [env cnx]
-  (let [region-ids
+  (let [regions
         @(p/q '[:find [?e ...]
                 :where
                 [?e :region/name]]
-              cnx)
-        regions
-        (->> region-ids
-             (map (fn [r] @(p/pull cnx '[*] r)))
-             (map (fn [r]
-                    (assoc r :region/people @(p/q '[:find (count ?e) .
-                                                    :in $ ?rid
-                                                    :where
-                                                    [?e :person/location ?rid]]
-                                                  cnx (:db/id r)))))
-             doall)]
+              cnx)]
     [:div.region-map
      [:h1.title "Regions"]
      (->> regions
-          (map region)
+          (map (fn [r] [region cnx r]))
           (into [:div.columns]))]))
 
 (defn temp-graph [cnx]
