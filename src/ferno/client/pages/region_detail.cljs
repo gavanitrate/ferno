@@ -123,7 +123,8 @@
   (let [people
           {:find  '[?p]
            :in    '[$ ?rid]
-           :where '[[?p :person/location ?rid]]}
+           :where '[[?rid :region/coordinates ?c]
+                    [?p :person/location ?c]]}
 
         actf-q
           {:in    '[?af]

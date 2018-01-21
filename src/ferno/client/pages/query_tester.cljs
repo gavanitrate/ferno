@@ -193,6 +193,20 @@
                       :region/noise updated-noise}])))
              750))))
 
+(defn generate-person-location []
+  (let [coordinates
+        @(p/q
+           '[:find [?c ...]
+             :where
+             [?e :region/coordinates ?c]]
+           (cnx))]
+    (swap! generators-atom assoc :person/location
+           (js/setInterval
+             (fn [] (db/transact
+                      [{:db/id           38
+                        :person/location {:db/id (rand-nth coordinates)}}]))
+             750))))
+
 
 
 (defn stop-generator [gen-data gen-key]
@@ -221,6 +235,13 @@
                          (stop-generator gen-data :region/noise)
                          (generate-region-noise))}
            ":region/noise"])
+        (let [pl-gen (:person/location gen-data)]
+          [:button.button.is-small
+           {:class    (when pl-gen "is-active is-danger")
+            :on-click #(if pl-gen
+                         (stop-generator gen-data :person/location)
+                         (generate-person-location))}
+           ":person/location"])
         ]]]]]])
 
 (defn page-component [env]

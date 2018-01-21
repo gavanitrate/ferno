@@ -2,42 +2,38 @@
  ;; regions
  ;; ---------------------------------------------------------------------
 
- {:db/id              -1100
-  :region/name        "Maverick Square"
+ {:region/name        "Maverick Square"
   :region/activities  [{:activity/type :eat}
                        {:activity/type :shop}
                        {:activity/type :work}]
-  :region/coordinates {:coordinate/lat 1 :coordinate/lng 1}
+  :region/coordinates {:db/id -1100 :coordinate/lat 1 :coordinate/lng 1}
   :region/noise       31
   :region/sheltered   false
   :region/temperature 24}
- {:db/id              -1200
-  :region/name        "Gaze"
+ {:region/name        "Gaze"
   :region/activities  [{:activity/type :drink}
                        {:activity/type :eat}
                        {:activity/type :dance}
                        {:activity/type :billiards}]
-  :region/coordinates {:coordinate/lat 1 :coordinate/lng 2}
+  :region/coordinates {:db/id -1200 :coordinate/lat 1 :coordinate/lng 2}
   :region/noise       78
   :region/sheltered   true
   :region/temperature 29}
- {:db/id              -1300
-  :region/name        "Gavan's Home"
+ {:region/name        "Gavan's Home"
   :region/activities  [{:activity/type :sleep}
                        {:activity/type :wash}
                        {:activity/type :eat}
                        {:activity/type :play}
                        {:activity/type :listen-music}]
-  :region/coordinates {:coordinate/lat 2 :coordinate/lng 1}
+  :region/coordinates {:db/id -1300 :coordinate/lat 2 :coordinate/lng 1}
   :region/noise       41
   :region/sheltered   true
   :region/temperature 23}
- {:db/id              -1400
-  :region/name        "Mitchel and Glove"
+ {:region/name        "Mitchel and Glove"
   :region/activities  [{:activity/type :eat}
                        {:activity/type :drink}
                        {:activity/type :work}]
-  :region/coordinates {:coordinate/lat 2 :coordinate/lng 2}
+  :region/coordinates {:db/id -1400 :coordinate/lat 2 :coordinate/lng 2}
   :region/noise       32
   :region/sheltered   true
   :region/temperature 24}
@@ -58,11 +54,11 @@
   }
 
  ;; market
- {:person/name     "Henry Eamonds"
-  :person/age      32
-  :person/gender   :male
-  :person/location -1100
-  :person/activity {:activity/type :shop}
+ {:person/name        "Henry Eamonds"
+  :person/age         32
+  :person/gender      :male
+  :person/location    -1100
+  :person/activity    {:activity/type :shop}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  47}
                        {:preference/type :region/temperature
@@ -72,123 +68,123 @@
   :person/gender   :male
   :person/location -1100
   :person/activity {:activity/type :shop}}
- {:person/name     "Olive McKendra"
-  :person/age      26
-  :person/gender   :female
-  :person/location -1100
-  :person/activity {:activity/type :work}
+ {:person/name        "Olive McKendra"
+  :person/age         26
+  :person/gender      :female
+  :person/location    -1100
+  :person/activity    {:activity/type :work}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  50}
                        {:preference/type :region/temperature
                         :preference/max  31}]}
 
  ;; pub
- {:person/name     "Imogen Kardif"
-  :person/age      23
-  :person/gender   :female
-  :person/location -1200
-  :person/activity {:activity/type :drink}
+ {:person/name        "Imogen Kardif"
+  :person/age         23
+  :person/gender      :female
+  :person/location    -1200
+  :person/activity    {:activity/type :drink}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  80}
                        {:preference/type :region/temperature
                         :preference/max  31}]}
- {:person/name     "Emily Dornal"
-  :person/age      25
-  :person/gender   :female
-  :person/location -1200
-  :person/activity {:activity/type :dance}
+ {:person/name        "Emily Dornal"
+  :person/age         25
+  :person/gender      :female
+  :person/location    -1200
+  :person/activity    {:activity/type :dance}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  85}
                        {:preference/type :region/temperature
                         :preference/max  28}]}
- {:person/name     "Kate Winchester"
-  :person/age      33
-  :person/gender   :female
-  :person/location -1200
-  :person/activity {:activity/type :work}
+ {:person/name        "Kate Winchester"
+  :person/age         33
+  :person/gender      :female
+  :person/location    -1200
+  :person/activity    {:activity/type :work}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  95}
                        {:preference/type :region/temperature
                         :preference/max  29}]}
- {:person/name     "Quin Van Khrit"
-  :person/age      21
-  :person/gender   :female
-  :person/location -1200
-  :person/activity {:activity/type :drink}
+ {:person/name        "Quin Van Khrit"
+  :person/age         21
+  :person/gender      :female
+  :person/location    -1200
+  :person/activity    {:activity/type :drink}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  75}
                        {:preference/type :region/temperature
                         :preference/max  24}]}
- {:person/name     "Duncan Runt"
-  :person/age      23
-  :person/gender   :male
-  :person/location -1200
-  :person/activity {:activity/type :dance}
+ {:person/name        "Duncan Runt"
+  :person/age         23
+  :person/gender      :male
+  :person/location    -1200
+  :person/activity    {:activity/type :dance}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  85}
                        {:preference/type :region/temperature
                         :preference/max  29}]}
- {:person/name     "Ulysis Taindsman"
-  :person/age      25
-  :person/gender   :male
-  :person/location -1200
-  :person/activity {:activity/type :billiards}
+ {:person/name        "Ulysis Taindsman"
+  :person/age         25
+  :person/gender      :male
+  :person/location    -1200
+  :person/activity    {:activity/type :billiards}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  95}
                        {:preference/type :region/temperature
                         :preference/max  31}]}
- {:person/name     "Jennifer Landrey"
-  :person/age      21
-  :person/gender   :female
-  :person/location -1200
-  :person/activity {:activity/type :work}
+ {:person/name        "Jennifer Landrey"
+  :person/age         21
+  :person/gender      :female
+  :person/location    -1200
+  :person/activity    {:activity/type :work}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  85}
                        {:preference/type :region/temperature
                         :preference/max  35}]}
- {:person/name     "Lincoln Reverence"
-  :person/age      27
-  :person/gender   :male
-  :person/location -1200
-  :person/activity {:activity/type :dance}
+ {:person/name        "Lincoln Reverence"
+  :person/age         27
+  :person/gender      :male
+  :person/location    -1200
+  :person/activity    {:activity/type :dance}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  60}
                        {:preference/type :region/temperature
                         :preference/max  22}]}
 
  ;; restaurant
- {:person/name     "John Lowings"
-  :person/age      45
-  :person/gender   :male
-  :person/location -1400
-  :person/activity {:activity/type :eat}
+ {:person/name        "John Lowings"
+  :person/age         45
+  :person/gender      :male
+  :person/location    -1400
+  :person/activity    {:activity/type :eat}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  35}
                        {:preference/type :region/temperature
                         :preference/max  26}]}
- {:person/name     "Barbara Lowings"
-  :person/age      46
-  :person/gender   :female
-  :person/location -1400
-  :person/activity {:activity/type :eat}
+ {:person/name        "Barbara Lowings"
+  :person/age         46
+  :person/gender      :female
+  :person/location    -1400
+  :person/activity    {:activity/type :eat}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  35}
                        {:preference/type :region/temperature
                         :preference/max  24}]}
- {:person/name     "James Kisp"
-  :person/age      22
-  :person/gender   :male
-  :person/location -1400
-  :person/activity {:activity/type :eat}
+ {:person/name        "James Kisp"
+  :person/age         22
+  :person/gender      :male
+  :person/location    -1400
+  :person/activity    {:activity/type :eat}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  68}
                        {:preference/type :region/temperature
                         :preference/max  30}]}
- {:person/name     "Jenna Finders"
-  :person/age      22
-  :person/gender   :female
-  :person/location -1400
-  :person/activity {:activity/type :drink}
+ {:person/name        "Jenna Finders"
+  :person/age         22
+  :person/gender      :female
+  :person/location    -1400
+  :person/activity    {:activity/type :drink}
   :person/preferences [{:preference/type :region/noise
                         :preference/max  50}
                        {:preference/type :region/temperature

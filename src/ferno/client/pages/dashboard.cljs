@@ -27,7 +27,8 @@
         @(p/q '[:find (count ?e) .
                 :in $ ?rid
                 :where
-                [?e :person/location ?rid]]
+                [?rid :region/coordinates ?c]
+                [?e :person/location ?c]]
               cnx region-id)]
     [:div.column
      [:a.box
