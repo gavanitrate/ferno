@@ -1,5 +1,6 @@
 (ns ferno.client.ui.components
-  (:require [reagent.core :as r]))
+  (:require [cljs.pprint]
+            [reagent.core :as r]))
 
 ;; form
 ;; ---------------------------------------------------------------------------------
