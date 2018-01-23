@@ -128,13 +128,15 @@
 
         actf-q
           {:in    '[?af]
-           :where '[[?p :person/location ?rid]
+           :where '[[?rid :region/coordinates ?c]
+                    [?p :person/location ?c]
                     [?p :person/activity ?act]
                     [?act :activity/type ?af]]}
 
         tempf-q
           {:where
-           '[[?p :person/location ?rid]
+           '[[?rid :region/coordinates ?c]
+             [?p :person/location ?c]
              [?p :person/preferences ?prefs]
              [?prefs :preference/type :region/temperature]
              [?prefs :preference/max ?pmax]
@@ -143,7 +145,8 @@
 
         noisef-q
           {:where
-           '[[?p :person/location ?rid]
+           '[[?rid :region/coordinates ?c]
+             [?p :person/location ?c]
              [?p :person/preferences ?prefs]
              [?prefs :preference/type :region/noise]
              [?prefs :preference/max ?pmax]
